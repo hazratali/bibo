@@ -1,117 +1,94 @@
-# BIBO project page
+# Bias In, Bias Out
 
-The public-facing page for *Bias In, Bias Out*, an audit of race-to-role assignment for
-high-status roles across four text-to-image models.
+**A Human-Validated Audit of Default-European Race-to-Role Assignment for High-Status Roles
+across Four Text-to-Image Models**
 
-Static HTML. No build step, no framework, no external requests. Everything is served from this
-repository, so it works on GitHub Pages as-is.
+Project page: **https://hazratali.github.io/race/**
 
-## Run it locally
+---
 
-```
-python -m http.server 8000
-```
+## The study
 
-Then open <http://127.0.0.1:8000>. It must be served over HTTP rather than opened as a file,
-because the gallery loads `assets/gallery.json` with `fetch`.
+Ask a text-to-image model for a doctor examining a patient, and the doctor usually arrives with
+light skin. Existing audits establish that much. What they cannot separate is whether a group
+appears at all, and whether it is placed above or below another group when both are present.
 
-## Layout
+BIBO measures the second thing. Each prompt puts two people in one scene, gives one of them a
+high-status role and a visible prop, names two races, and never says which person is which. The
+model makes the assignment, and that assignment is the measurement. Mention order is
+counterbalanced, and an adversarial condition names the European second so that word order works
+against the effect being measured.
 
-```
-index.html              the page
-assets/style.css        all styling, light and dark
-assets/figures.js       the six figures and two tables, as inline SVG and HTML
-assets/app.js           gallery, filters, lightbox, navigation, theme
-assets/gallery.json     metadata for the 48 sample images
-assets/img/gallery/     the 48 images, 900px and 340px WebP
-tools/build_gallery.py  regenerates the two files above from the study corpus
-.nojekyll              stops GitHub Pages running the files through Jekyll
-```
+Four systems were audited between May and July 2026: **GPT Image 1.5** (OpenAI), **Imagen 4**
+(Google), **Grok Imagine** (xAI) and **SD 3.5 Large** (Stability AI). 1,056 images across 12
+scenes and 60 locked prompts.
 
-## Where the numbers come from
+## What was found
 
-Every figure and table is generated from the committed results files in the study repository at
-<https://github.com/baqarjafri/BIBO_Research>. Each caption names its source file. The values are
-transcribed into `assets/figures.js` and were verified against those files on 2026-08-04:
+| | |
+|---|---:|
+| Outputs placing a white-skin-toned person in the status role when **no race was named**, GPT Image 1.5 | **100%** (22 of 22) |
+| Margin over chance when two races are named | **+0.31** GPT · +0.33 Grok · +0.24 Imagen · +0.19 SD |
+| Odds of a European-presenting status-holder when named first rather than second | **19.4×** |
+| Prompts rendered as instructed, most compliant model to least | **96% → 35%** |
 
-| Figure | Source |
+Three findings sit behind those numbers. The preference appears three independent ways, and it
+survives adversarial ordering in two of the four models. It does not fade as models improve: the
+most instruction-compliant system shows the most complete unprompted default. And prompt fidelity
+varies so widely across models that it is reported as a finding in its own right, because it sets
+the denominator every bias number is measured over.
+
+The automated labelling was validated against a coder working blind across 419 images. Agreement
+on the outcome was 0.986, which is the ceiling two humans reach with each other (0.977), with no
+pro-European over-calls, the error direction that would inflate the reported bias.
+
+## Data, code and images
+
+| | |
 |---|---|
-| Figure 1, the design | `PROTOCOL.md` §1, `data/prompts.csv` |
-| Figure 2, three probes | `baseline_default_race.csv`, `dsb_primary.csv`, `dsb_by_order.csv` |
-| Figure 3, no race named | `baseline_default_race.csv`, `CALCULATIONS.md` B1 |
-| Figure 4, mention order | `dsb_by_order.csv`, `CALCULATIONS.md` B2 and B3 |
-| Figure 5, prompt fidelity | `fidelity_summary.csv` |
-| Figure 6, scene by model | `dsb_by_scene.csv`, `OPEN_ANALYSES.md` A3 |
-| Table 1, margin over chance | `glmm_primary.csv`, `glmm_robustness.csv`, `dsb_primary.csv` |
-| Table 2, human validation | `human_audit_report.json`, `reliability.json` |
+| Pipeline, results and figures | https://github.com/baqarjafri/BIBO_Research |
+| Design and analysis plan | [PROTOCOL.md](https://github.com/baqarjafri/BIBO_Research/blob/main/PROTOCOL.md) |
+| All 1,056 generated images | [Google Drive](https://drive.google.com/drive/folders/18WQEJzRRblKPY-DOzZ70jU9tcM5EgUz8) |
+| SHA-256 checksums | [SHA256SUMS.txt](https://github.com/baqarjafri/BIBO_Research/blob/main/outputs/SHA256SUMS.txt) |
 
-If a number changes in the study repository, update `assets/figures.js` to match. The figures are
-plain data arrays at the top of each function, so this is a one-line edit per value.
+The full corpus is public, not a sample. It includes every image the coding gates excluded, and
+each one is hashed, so any download can be checked against the exact set the results were
+computed over. A citable DOI deposit will follow.
 
-## Regenerating the gallery
+Every figure and table on the project page is generated from a committed results file, and each
+caption names the file it came from.
+
+## This repository
+
+The source of the project page. Static HTML, CSS and JavaScript, with no build step and no
+external requests, served by GitHub Pages.
 
 ```
-python tools/build_gallery.py
+index.html            the page
+assets/style.css      styling, light and dark
+assets/figures.js     the six figures and two tables, as inline SVG
+assets/app.js         gallery, filters, lightbox, navigation
+assets/gallery.json   metadata for the 48 sample images
+assets/img/gallery/   the sample images
+tools/build_gallery.py  regenerates the sample set from the corpus
 ```
 
-Requires the study repository checked out locally, with the image corpus present. Edit the `BIBO`
-path at the top of the script if it lives somewhere else.
+The 48 sample images are selected by rule, not by eye. The slot each image fills is fixed by its
+label before any picture is inspected, candidates are restricted to images where both primary
+raters agreed without a tiebreaker, and ties break deterministically, so the same set is produced
+on every run.
 
-Selection is deterministic and rule-based, in this order:
+## Citation
 
-1. **The slot is fixed by the label.** What each card must show is decided from the labelled
-   outcome before any image is looked at. Selection never picks an outcome.
-2. **Legibility screen.** Only images where both primary raters agreed without a tiebreaker
-   (`consensus_label == high_confidence_AB`) are eligible. Images that needed a third rater are
-   the ambiguous ones and stay out of the public gallery.
-3. **Deterministic ordering.** Ties break on `image_id`, so the same 48 images come out every run.
+A preprint is forthcoming. Until then, cite the project page and the code repository.
 
-The 48 break down as 8 with no race named, 16 as eight order-flip pairs, 12 covering one scene
-each, 8 fidelity failures, and 4 counter-examples where the non-European holds the status prop.
+## Authors
 
-## Deploying to GitHub Pages
+Hazrat Ali · Baqar Jafri · Muhammad Muneeb Saad
+University of Stirling
 
-Push to `main`, then in **Settings → Pages** set the source to `main` and the folder to `/ (root)`.
-`.nojekyll` is already present, so `assets/` is served untouched.
+## Note on the images
 
-## Still to fill in
-
-- **Affiliation for Muhammad Muneeb Saad.** Two places: the `.bylist` in `index.html` and `TEAM`
-  at the top of `assets/app.js`. Both currently read "affiliation to confirm".
-- **BibTeX author field.** Still `AUTHOR LIST PENDING` in `index.html`, because the citation
-  needs the confirmed order and the preprint identifier together.
-- **Headshots.** Add `photo: 'assets/img/team/name.jpg'` to any `TEAM` entry to replace the
-  monogram. The layout does not change.
-- **Preprint link.** Two disabled links, in the rail and in the hero, plus the BibTeX note.
-- **Permanent image archive.** The corpus link is a placeholder pending a decision on whether the
-  raw images are public or gated, and pending a DOI-backed archive to replace the working link.
-
-There are no partner institutions, so the page carries no logo row. The University of Stirling
-is credited in the footer.
-
-## Conventions used on this page
-
-Body copy follows the manuscript review decisions on wording. It does not equate a white skin
-tone in an output with European identity where no race was named, it says "adversarial ordering"
-rather than "hard test", and it says "labelling" rather than "coding".
-
-**The title is deliberately excepted.** It is reproduced verbatim from the paper, including
-"Default-European", by author decision on 2026-08-04. The body copy avoids that framing, so the
-h1 and the prose currently phrase the same idea two ways. This is parked, not an oversight.
-
-## Pending the next paper draft
-
-Re-sync is deferred until the next manuscript version is built. When it lands, check these
-against it, in this order. Nothing else on the page depends on the paper's wording.
-
-1. **Title** in `index.html` (the `h1`) and in the `<title>` / `og:title` meta tags.
-2. **Terminology**, if the "default" framing is resolved in the manuscript: the body copy in
-   `index.html` and the figure titles in `assets/figures.js` should end up saying it the same way.
-3. **Figure and table numbers.** The page follows `FIGURE_MANIFEST.md` reading order: Figures 1-6,
-   Table 1 = human validation, Table 2 = DSB. If the manuscript renumbers, update the `.fignum`
-   spans in `index.html`. Note that a sample-image figure was planned as a new Figure 2, which
-   would shift Figures 2-6 to 3-7.
-4. **Any changed value.** Every figure's data lives in a plain array at the top of its function in
-   `assets/figures.js`, and every caption names its source file. See the table above.
-5. **Author list and order**, if it changes, in three places: the `.bylist` in `index.html`,
-   `TEAM` in `assets/app.js`, and the BibTeX block.
+Every image is a generated model output, not a photograph of a real person. The race categories
+are those used in the prompts and in the labelling scheme, and are not a claim about anyone's
+identity.

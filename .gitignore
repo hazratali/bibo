@@ -1,5 +1,6 @@
-# Local tooling output, never published
+# Local tooling output and maintainer notes, never published
 .gstack/
+*.local.*
 
 # OS / editor cruft
 Thumbs.db
