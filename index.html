@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BIBO · Race-to-role assignment in four text-to-image models</title>
+<meta name="description" content="A human-validated audit of race-to-role assignment for high-status roles across four text-to-image models. 1,056 images, four models, deterministic labelling, blind human validation.">
+<meta property="og:title" content="Bias In, Bias Out">
+<meta property="og:description" content="When two people share a scene and only one holds the status prop, which race does a text-to-image model choose? An audit of four systems over 1,056 images.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+
+<!-- ============================ RAIL ============================ -->
+<aside class="rail">
+  <div>
+    <div class="mark">BIB<i>O</i></div>
+    <div class="marksub">Bias in, bias out</div>
+  </div>
+  <nav class="steps" aria-label="Sections">
+    <a href="#finding" class="on">The finding</a>
+    <a href="#method">Method</a>
+    <a href="#results">Results</a>
+    <a href="#evidence">Evidence</a>
+    <a href="#validation">Validation</a>
+    <a href="#data">Data &amp; cite</a>
+  </nav>
+  <div class="raillinks">
+    <a href="#" aria-disabled="true">Preprint (forthcoming)</a>
+    <a href="https://github.com/baqarjafri/BIBO_Research">Code &amp; results</a>
+    <a href="https://drive.google.com/drive/folders/18WQEJzRRblKPY-DOzZ70jU9tcM5EgUz8">Image corpus (1,056)</a>
+    <a href="https://github.com/baqarjafri/BIBO_Research/blob/main/PROTOCOL.md">Protocol</a>
+    <button class="themebtn" id="theme" type="button">Switch theme</button>
+  </div>
+</aside>
+
+<main id="main">
+
+<!-- ========================= 01 THE FINDING ====================== -->
+<section class="band" id="finding">
+  <p class="tag">Audit · 4 models · 1,056 images · 2026</p>
+  <h1>Bias In, Bias Out: A Human-Validated Audit of Default-European Race-to-Role Assignment
+    for High-Status Roles across Four Text-to-Image Models</h1>
+
+  <ol class="bylist">
+    <li><b>Dr. Hazrat Ali</b><span>University of Stirling</span></li>
+    <li><b>Baqar Jafri</b><span>University of Stirling</span></li>
+    <li><b>Muhammad Muneeb Saad</b><span class="pending">affiliation to confirm</span></li>
+  </ol>
+
+  <div class="links">
+    <a class="off" href="#">Read the paper</a>
+    <a href="https://github.com/baqarjafri/BIBO_Research">Code &amp; results</a>
+    <a class="ghost" href="#evidence">Sample images</a>
+    <a class="ghost" href="#data">Full corpus</a>
+  </div>
+
+  <div class="explainer">
+    <p class="exq">In plain terms: who does the model put in charge when nobody tells it?</p>
+    <p class="lede">Give a text-to-image system two people, name two races, hand one of them a
+      stethoscope or a gavel, and say nothing about who holds it. The system decides. Across four
+      models it assigned the high-status role to the European-presenting person far more often
+      than to the other race, and it kept doing so when the prompt named the European second.</p>
+  </div>
+</section>
+
+<div class="bleed" id="strip" aria-label="Eight model outputs generated from prompts that named no race"></div>
+<p class="bleedcap">
+  <span><b>No race was named in any of these prompts.</b> In each one, the person holding the
+    status prop was rendered with a white skin tone.</span>
+  <span>8 of the 96 no-race-named images</span>
+</p>
+
+<div class="stats">
+  <div class="stat"><div class="n">100%</div>
+    <div class="l">of GPT Image 1.5 outputs with no race named placed a white-skin-toned person in
+      the status role</div>
+    <div class="src">22 of 22 · baseline_default_race.csv</div></div>
+  <div class="stat"><div class="n">+0.31</div>
+    <div class="l">margin over chance for GPT when two races are named. Grok +0.33, Imagen +0.24,
+      SD 3.5 Large +0.19</div>
+    <div class="src">glmm_primary.csv</div></div>
+  <div class="stat"><div class="n">19.4&times;</div>
+    <div class="l">the odds of a European-presenting status-holder when that race is named first
+      rather than second</div>
+    <div class="src">dsb_by_order.csv · p = 2&times;10<sup>&minus;34</sup></div></div>
+  <div class="stat"><div class="n">96&rarr;35%</div>
+    <div class="l">of prompts rendered as instructed, from the most compliant model to the least</div>
+    <div class="src">fidelity_summary.csv</div></div>
+</div>
+
+<section class="band">
+  <p class="tag">What is new</p>
+  <h2>Counting who appears is not the same as measuring who is placed above whom.</h2>
+  <p>Existing audits generate a single subject, a doctor or a CEO, and count the demographics that
+    come back. That reveals a disparity but cannot separate two different things a fair deployment
+    cares about: whether a group appears at all, and whether it is placed above or below another
+    group when both are present.</p>
+  <p>Seeing status attribution needs a scene with two people of two named races and an unambiguous
+    status cue. Naming two races introduces its own problem, because they have to be named in some
+    order, and word order alone steers how models bind people to roles. A third problem is trust:
+    a bias read off a scene by an automated judge is only as credible as that judge, and such
+    judges are rarely checked against a human.</p>
+  <p>This study addresses all three. It builds the two-race scene, counterbalances the naming order
+    and adds an adversarial condition, and validates every automated label against a blind human
+    coder.</p>
+
+  <div class="rq"><div class="rqid">RQ1</div><div>
+    <p class="rqq">When a model depicts a high-status role, does it reach for a European-presenting
+      person, both when no race is named and when two races are named?</p>
+    <p class="rqa">Yes in three of the four models, and in every one of the twelve scenes.</p></div></div>
+  <div class="rq"><div class="rqid">RQ2</div><div>
+    <p class="rqq">Is that a learned race-to-status association, or an artefact of which race the
+      prompt happens to name first?</p>
+    <p class="rqa">Mention order has a large effect, but a residual preference survives adversarial
+      ordering in GPT Image 1.5 and Grok Imagine. In SD 3.5 Large it does not, and the apparent
+      preference there is order-driven.</p></div></div>
+  <div class="rq"><div class="rqid">RQ3</div><div>
+    <p class="rqq">How faithfully do the models render the requested two-person, two-race,
+      prop-held scene in the first place?</p>
+    <p class="rqa">From 95.8% of outputs down to 35.4%. Prompt fidelity is reported as a finding in
+      its own right, because it sets the denominator every bias number is measured over.</p></div></div>
+</section>
+
+<!-- =========================== 02 METHOD ======================== -->
+<section class="band" id="method">
+  <p class="tag">Method</p>
+  <h2>Twelve scenes, sixty prompts, four models, and a labelling procedure that reproduces exactly.</h2>
+  <p>Each scene pairs a high-status role with a low-status one and gives each a visual prop, so a
+    coder can tell at a glance who holds standing. The prompt names the two roles, then names two
+    races without binding either race to either role. The model makes the assignment, and that
+    assignment is the measurement.</p>
+
+  <figure>
+    <div class="figframe" id="fig1"></div>
+    <figcaption>
+      <span class="fignum">Figure 1</span>
+      <b>The two-race design, and what reversing the mention order means.</b> The prompt names a
+      high-status role with its prop, a low-status role with its prop, then names two races without
+      saying which person is which. Order is counterbalanced. In the adversarial ordering the
+      European is named second, so word order works against the effect being measured. A further
+      condition drops the race sentence altogether.
+      <span class="src">Source: PROTOCOL.md §1, data/prompts.csv</span>
+    </figcaption>
+  </figure>
+
+  <h3>How the 1,056 images became 688 measurements</h3>
+  <div class="pipe">
+    <div class="node"><div class="k">Scenes</div><div class="v">12</div>
+      <div class="d">status dyads, doctor and patient through to coach and athlete</div></div>
+    <div class="node"><div class="k">Prompts</div><div class="v">60</div>
+      <div class="d">2 race pairs × 2 orders, plus a no-race-named condition</div></div>
+    <div class="node"><div class="k">Models</div><div class="v">4</div>
+      <div class="d">264 images each, 1024px, hashed</div></div>
+    <div class="node"><div class="k">Generated</div><div class="v">1,056</div>
+      <div class="d">960 two-race, 96 with no race named</div></div>
+    <div class="node"><div class="k">Labelling</div><div class="v">3</div>
+      <div class="d">independent raters, strict majority, deterministic</div></div>
+    <div class="node drop"><div class="k">Exclusions</div><div class="v">&minus;272</div>
+      <div class="d">six gates, kept and reported as findings</div></div>
+    <div class="node out"><div class="k">Analysed</div><div class="v">688</div>
+      <div class="d">plus 419 images re-checked by a blind human</div></div>
+  </div>
+  <p class="small">Two labellers from different model families read every image independently. A
+    third is consulted only where they disagree. A genuine three-way disagreement is recorded as
+    unclear and excluded rather than resolved arbitrarily. The whole labelled corpus regenerates
+    exactly from the raw rater records, and was verified at 1,056 of 1,056.</p>
+</section>
+
+<!-- =========================== 03 RESULTS ======================= -->
+<section class="band" id="results">
+  <p class="tag">Results</p>
+  <h2>The same pattern appears three separate ways, and it does not fade as models get better.</h2>
+  <p>Each figure below is generated from the committed results file named in its caption. Every
+    number on this page traces to one of those files. Figure and table numbers follow the paper,
+    so Table 1 sits with the validation section further down.</p>
+
+  <figure>
+    <div class="figframe" id="fig2"></div>
+    <figcaption>
+      <span class="fignum">Figure 2</span>
+      <b>Three probes, four models.</b> Share of labelled images in which the European-presenting
+      person holds the high-status role, under no race named, two races named, and adversarial
+      ordering. Bars above the chance line favour the European-presenting person. Only SD 3.5
+      Large falls below it under adversarial ordering.
+      <span class="src">Source: baseline_default_race.csv, dsb_primary.csv, dsb_by_order.csv</span>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="figframe tableframe" id="tab2"></div>
+    <figcaption>
+      <span class="fignum">Table 2</span>
+      <b>Per-model margin over chance in the two-race condition.</b> The primary column is a
+      one-sided proportion test; the robustness column is a regularised clustering model that pools
+      scenes toward the grand mean. Both are Benjamini-Hochberg corrected across the four models. A
+      result counts as confirmed only when it holds under both and the margin is at least 0.15.
+      GPT Image 1.5, Grok Imagine and Imagen 4 clear both. SD 3.5 Large clears the primary only, so
+      it is reported as directional.
+      <span class="src">Source: glmm_primary.csv, glmm_robustness.csv, dsb_primary.csv</span>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="figframe" id="fig3"></div>
+    <figcaption>
+      <span class="fignum">Figure 3</span>
+      <b>With no race named at all.</b> Share of images in which the person holding the status prop
+      was rendered with a white skin tone, with 95% Wilson intervals. Three of the four models sit
+      well above chance. SD 3.5 Large does not reach significance and its interval crosses the
+      chance line. Note that in this condition the whole scene tends toward white skin tone rather
+      than the high-status figure alone; the status differentiation is what the two-race condition
+      isolates.
+      <span class="src">Source: baseline_default_race.csv, CALCULATIONS.md B1</span>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="figframe" id="fig4"></div>
+    <figcaption>
+      <span class="fignum">Figure 4</span>
+      <b>Mention order moves the assignment, and something survives it.</b> The left dot is the
+      share when the European is named first, the right dot when named second. The distance between
+      them is the order effect. For GPT Image 1.5 and Grok Imagine the right dot stays above chance,
+      so a preference remains once order is working against it. For Imagen 4 the result is
+      inconclusive, and SD 3.5 Large reverses below chance, meaning its apparent preference was
+      order-driven.
+      <span class="src">Source: dsb_by_order.csv, CALCULATIONS.md B2 and B3</span>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="figframe" id="fig5"></div>
+    <figcaption>
+      <span class="fignum">Figure 5</span>
+      <b>Instruction-following falls sharply from the most compliant model to the least.</b> How
+      each model handled its 240 two-race prompts. The share rendered as instructed drops from
+      95.8% to 35.4%. The failure profiles differ: Imagen 4 mostly returns the wrong number of
+      people, while SD 3.5 Large mostly collapses the two prompted races into one. Hover any
+      segment for its count.
+      <span class="src">Source: fidelity_summary.csv</span>
+    </figcaption>
+  </figure>
+
+  <div class="callout">
+    <p class="small" style="margin:0"><b>A result that cuts against a simple reading.</b> When
+      SD 3.5 Large collapses the two prompted races into one, the race it drops is usually the
+      European one, in 79 of 82 cases. Its rendering failure erases European figures even though
+      its valid images favour them for status. That makes the reported margin conservative rather
+      than inflated.</p>
+  </div>
+
+  <figure>
+    <div class="figframe" id="fig6"></div>
+    <figcaption>
+      <span class="fignum">Figure 6</span>
+      <b>Every scene, every model.</b> Share of labelled images in which the European-presenting
+      person holds the high-status role, per scene and model. Blue favours the European-presenting
+      person, red the non-European, white is chance. Pooled across models, all twelve scenes are
+      European-dominant at a 5% false-discovery rate, but the strength varies significantly between
+      scenes (chi-square p = 3&times;10<sup>&minus;4</sup>). SD 3.5 Large at scene 12 is the single
+      cell where the non-European reliably holds the role.
+      <span class="src">Source: dsb_by_scene.csv, OPEN_ANALYSES.md A3</span>
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ========================== 04 EVIDENCE ======================= -->
+<section class="band" id="evidence">
+  <p class="tag">Evidence</p>
+  <h2>Forty-eight images, chosen by rule rather than by eye.</h2>
+  <p>Start with these three. Different models, different scenes, and in every one the prompt named
+    the European <b>second</b>, the ordering designed to work against the effect. The European
+    still ends up holding the gavel, the crown and the badge.</p>
+  <div class="lead" id="lead"></div>
+
+  <h3>The full set</h3>
+  <p>Each card shows what the model was asked for, what it produced, and how it was labelled. The
+    slot each image fills was fixed by its label before any picture was looked at, and candidates
+    were restricted to images where both primary raters agreed without a tiebreaker. Selecting for
+    legibility inside a fixed outcome cannot change the rates reported above. These are
+    illustrations; the figures are the evidence.</p>
+  <div class="filters" id="filters" role="group" aria-label="Filter images"></div>
+  <p class="gcount" id="gcount"></p>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- ========================= 05 VALIDATION ====================== -->
+<section class="band" id="validation">
+  <p class="tag">Validation and limits</p>
+  <h2>If the automated labeller shared the models&rsquo; bias, it would manufacture this result rather than measure it.</h2>
+  <p>That objection is the reason for the human audit. One coder, working blind, reviewed 419
+    images across four strata: every case where the two primary raters disagreed, an archived
+    stratified sample fixed in advance, a balanced extension, and an oversample of the exclusion
+    gates. The model, the labels and the machine ratings were all hidden, the coding was done on
+    the prop-holder rather than on the outcome, and the outcome was derived afterwards.</p>
+
+  <figure>
+    <div class="figframe tableframe" id="tab1"></div>
+    <figcaption>
+      <span class="fignum">Table 1</span>
+      <b>Validation of the automated labelling.</b> Read the first row against the second. Agreement
+      between the automated labelling and the blind human is 0.986, which sits at the 0.977 ceiling
+      that two humans reach with each other. A second, hypothesis-blind coder produced no
+      pro-European over-calls at all, the error direction that would inflate the reported bias, with
+      a one-sided 95% upper bound of 1.5%.
+      <span class="src">Source: human_audit_report.json, reliability.json</span>
+    </figcaption>
+  </figure>
+
+  <div class="cols">
+    <div>
+      <h3>What the study cannot tell you</h3>
+      <p class="small"><b>Race is read from a rendered face</b> and sorted into a small set of
+        categories. That is a proxy, it cannot represent mixed or ambiguous presentation, and it
+        imports the same perceptual judgments the models were trained on. Where no race is named,
+        a white skin tone in an output is not evidence that the model intended a European identity.</p>
+      <p class="small"><b>Status is fixed by costume.</b> Whoever holds the prop is treated as the
+        high-status person, which makes status legible to a coder but coarser than how a human
+        viewer reads a scene.</p>
+    </div>
+    <div>
+      <h3>How far it generalises</h3>
+      <p class="small"><b>Bounded by what was generated.</b> Two race pairs, twelve scenes, four
+        models. Other pairings, professions and prompt styles could shift the size or the direction
+        of the effect. Read this as demonstrated for these models, races and scenes, not as a
+        constant.</p>
+      <p class="small"><b>A snapshot in time.</b> Proprietary models are updated without notice.
+        The fixed prompt set and the deterministic pipeline exist so the same measurement can be
+        repeated against a later build, which is what the released materials are for.</p>
+      <p class="small"><b>SD 3.5 Large contributes only 85 labelled images</b> and its confirmation
+        depends on which analysis is used, so it is reported as directional throughout.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 06 DATA AND CITE ===================== -->
+<section class="band" id="data">
+  <p class="tag">Data, code and citation</p>
+  <h2>Every number on this page regenerates from the released files.</h2>
+  <div class="cols">
+    <div>
+      <h3>Code and results</h3>
+      <p class="small">The repository carries the generation, labelling and analysis pipeline, the
+        locked prompts with their hash, the per-image labelled outcomes, every results file, and
+        the figures. Six commands reproduce every number from the committed outcomes.</p>
+      <div class="links">
+        <a href="https://github.com/baqarjafri/BIBO_Research">GitHub repository</a>
+        <a class="ghost" href="https://github.com/baqarjafri/BIBO_Research/blob/main/PROTOCOL.md">Protocol</a>
+        <a class="ghost" href="https://github.com/baqarjafri/BIBO_Research/blob/main/DATA_DICTIONARY.md">Data dictionary</a>
+      </div>
+      <h3>The image corpus</h3>
+      <p class="small">All 1,056 generated images are public, roughly 1.3 GB, organised by model
+        and condition. Not a sample: the full audited corpus, including every image the coding
+        gates excluded. Each one carries a SHA-256 hash in the repository, so any download can be
+        checked against the exact set the results were computed over.</p>
+      <div class="links">
+        <a href="https://drive.google.com/drive/folders/18WQEJzRRblKPY-DOzZ70jU9tcM5EgUz8">Browse all 1,056 images</a>
+        <a class="ghost" href="https://github.com/baqarjafri/BIBO_Research/blob/main/outputs/SHA256SUMS.txt">SHA-256 checksums</a>
+      </div>
+      <p class="small" style="margin-top:1rem"><span class="pending">DOI archive forthcoming</span>
+        A citable, DOI-backed deposit will replace the working link before publication. The
+        contents will be identical and verifiable against the same checksums.</p>
+    </div>
+    <div>
+      <h3>How to cite</h3>
+      <div class="cite" id="bibtex">@misc{bibo2026,
+  title  = {Bias In, Bias Out: A Human-Validated Audit of Race-to-Role
+            Assignment for High-Status Roles across Four
+            Text-to-Image Models},
+  author = {AUTHOR LIST PENDING},
+  year   = {2026},
+  note   = {Preprint. Code and data:
+            https://github.com/baqarjafri/BIBO_Research}
+}</div>
+      <button class="copybtn" id="copy" type="button">Copy BibTeX</button>
+      <p class="small" style="margin-top:.8rem">The citation block is a placeholder until the
+        author list is final and the preprint has an identifier.</p>
+    </div>
+  </div>
+
+  <h3>Authors</h3>
+  <div class="team" id="team"></div>
+</section>
+
+<footer>
+  <p>Conducted at the <b>University of Stirling</b>.</p>
+  <p>All images on this page are generated model outputs, not photographs of real people. Race
+    categories are the categories used in the prompts and in the labelling scheme; they are not a
+    claim about anyone&rsquo;s identity. Figures use a colourblind-safe palette.</p>
+  <p>BIBO · a protocol-archived audit · every image hashed and traceable to the released corpus</p>
+</footer>
+</main>
+</div>
+
+<dialog id="lb"><button class="lbclose" id="lbclose" aria-label="Close">&times;</button>
+  <div class="lb"><img id="lbimg" alt=""><div class="lbside" id="lbside"></div></div>
+</dialog>
+
+<script src="assets/figures.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

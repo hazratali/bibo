@@ -1,0 +1,14 @@
+# Local tooling output, never published
+.gstack/
+
+# OS / editor cruft
+Thumbs.db
+.DS_Store
+~$*
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+.venv/

@@ -1,0 +1,272 @@
+/* BIBO project page. Static, no build step, no external requests. */
+
+:root{
+  --bg:#FAFAF9; --ink:#0A0A0A; --soft:#5C5C58; --hair:#DEDEDA; --panel:#F1F1EE;
+  --blue:#0072B2; --amber:#E69F00; --green:#009E73; --vermillion:#D55E00;
+  --chance:#B0332B;
+  --sans:'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+  --serif:'Iowan Old Style',Georgia,'Times New Roman',serif;
+  --mono:ui-monospace,'Cascadia Mono',Consolas,'SF Mono',monospace;
+  --fig-font:'Inter','Segoe UI',system-ui,sans-serif;
+  --rail:15rem;
+}
+:root[data-theme="dark"],
+html:not([data-theme="light"]) body.auto-dark{
+  --bg:#0C0C0B; --ink:#F2F2EE; --soft:#9C9C95; --hair:#2A2A27; --panel:#161614;
+  --blue:#5FA8D8; --amber:#F0B84A; --green:#4FBF9B; --vermillion:#EE8A4E;
+  --chance:#E4736A;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C0C0B; --ink:#F2F2EE; --soft:#9C9C95; --hair:#2A2A27; --panel:#161614;
+    --blue:#5FA8D8; --amber:#F0B84A; --green:#4FBF9B; --vermillion:#EE8A4E;
+    --chance:#E4736A;
+  }
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1rem}
+body{
+  margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:var(--ink)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:1rem;top:1rem;z-index:99;background:var(--ink);color:var(--bg);padding:.6rem 1rem}
+
+.shell{display:grid;grid-template-columns:var(--rail) 1fr;max-width:84rem;margin:0 auto}
+
+/* ---------- left rail ---------- */
+.rail{
+  border-right:1px solid var(--hair);padding:1.9rem 1.4rem;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.mark{font-family:var(--mono);font-weight:700;font-size:1.4rem;letter-spacing:-.05em;line-height:1}
+.mark i{font-style:normal;color:var(--amber)}
+.marksub{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--soft);
+  margin:.35rem 0 2rem}
+.steps{list-style:none;margin:0 0 2rem;padding:0;counter-reset:s}
+.steps a{
+  counter-increment:s;display:flex;align-items:center;min-height:2.75rem;font-size:.87rem;
+  padding-left:2.1rem;position:relative;color:var(--soft);text-decoration:none;
+}
+.steps a::before{content:counter(s,decimal-leading-zero);position:absolute;left:.55rem;
+  font-family:var(--mono);font-size:.7rem;color:var(--soft);opacity:.55}
+.steps a:hover{color:var(--ink)}
+.steps a.on{color:var(--ink);font-weight:600}
+.steps a.on::before{color:var(--amber)}
+.raillinks{border-top:1px solid var(--hair);padding-top:1rem}
+.raillinks a{display:flex;align-items:center;min-height:2.75rem;font-size:.78rem;color:var(--soft);
+  text-decoration:none;border-bottom:1px solid var(--hair)}
+.raillinks a:hover{color:var(--ink);border-color:var(--amber)}
+.raillinks a[aria-disabled]{opacity:.5;font-style:italic;pointer-events:none}
+.themebtn{margin-top:1.1rem;background:none;border:1px solid var(--hair);color:var(--soft);
+  font:inherit;font-size:.78rem;min-height:2.75rem;padding:.4rem .75rem;border-radius:3px;
+  cursor:pointer;width:100%}
+.themebtn:hover{color:var(--ink);border-color:var(--soft)}
+
+/* ---------- bands ---------- */
+main{min-width:0}
+.band{padding:3.1rem 3rem;border-bottom:1px solid var(--hair)}
+.band:last-child{border-bottom:0}
+.tag{font-family:var(--mono);font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--soft);display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem}
+.tag::before{content:'';width:1.7rem;height:2px;background:var(--amber);flex:none}
+h1{font-size:clamp(2rem,4.2vw,3.05rem);line-height:1.06;letter-spacing:-.035em;font-weight:800;
+  margin:0 0 1.2rem;max-width:20ch;text-wrap:balance}
+h1 em{font-style:normal;color:var(--soft)}
+h2{font-size:1.55rem;line-height:1.2;letter-spacing:-.02em;font-weight:700;margin:0 0 .9rem;
+  max-width:26ch;text-wrap:balance}
+/* was 1.02rem, within 2% of the 1rem body size, so it read as bold body text
+   rather than a level in the hierarchy */
+h3{font-size:1.18rem;font-weight:700;letter-spacing:-.01em;margin:2.4rem 0 .6rem}
+p{margin:0 0 1rem;max-width:62ch}
+.lede{font-size:1.09rem;color:var(--soft);max-width:58ch}
+.small{font-size:.88rem;color:var(--soft)}
+
+/* ---------- hero ---------- */
+/* The paper title is the h1, so it is set smaller and tighter than a marketing
+   headline would be, and the plain-language question sits below it. */
+#finding h1{font-size:clamp(1.55rem,2.9vw,2.25rem);line-height:1.18;letter-spacing:-.02em;
+  font-weight:700;max-width:30ch}
+.bylist{list-style:none;display:flex;flex-wrap:wrap;gap:0 2.2rem;margin:1.5rem 0 0;padding:.95rem 0 0;
+  border-top:2px solid var(--ink)}
+.bylist li{font-size:.87rem;line-height:1.45;padding:.2rem 0}
+.bylist b{display:block;font-weight:600}
+.bylist span{font-size:.78rem;color:var(--soft)}
+.pending{color:var(--soft);font-style:italic;opacity:.8}
+span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius:3px;
+  padding:.1rem .45rem;font-size:.74rem;font-style:italic}
+.bylist span.pending{background:none;border:0;padding:0}
+
+.explainer{margin-top:2.2rem;padding-top:1.5rem;border-top:1px solid var(--hair)}
+.exq{font-family:var(--serif);font-size:clamp(1.3rem,2.6vw,1.85rem);line-height:1.3;
+  letter-spacing:-.015em;margin:0 0 .9rem;max-width:26ch;color:var(--ink)}
+.links{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:1.4rem}
+.links a{font-size:.79rem;font-weight:600;padding:.52rem 1rem;border:1.5px solid var(--ink);
+  text-decoration:none;color:var(--ink);border-radius:2px}
+.links a:hover{background:var(--ink);color:var(--bg)}
+.links a.ghost{border-color:var(--hair);color:var(--soft);font-weight:400}
+.links a.off{border-style:dashed;opacity:.6;pointer-events:none}
+
+.bleed{display:grid;grid-template-columns:repeat(8,1fr);border-top:2px solid var(--ink)}
+.bleed img{width:100%;aspect-ratio:1;object-fit:cover}
+.bleedcap{padding:.85rem 3rem;font-size:.8rem;color:var(--soft);display:flex;
+  justify-content:space-between;gap:2rem;border-bottom:1px solid var(--hair);flex-wrap:wrap}
+.bleedcap b{color:var(--ink)}
+
+/* ---------- stats ---------- */
+/* minmax(0,1fr) rather than 1fr: the source filenames are long unbreakable
+   tokens, and auto-sized tracks refuse to shrink below them. */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--hair);
+  border-bottom:1px solid var(--hair)}
+.stat{background:var(--bg);padding:1.55rem 1.35rem;min-width:0}
+/* fluid, because "96->35%" at a fixed 2.5rem is wider than a narrow column */
+.stat .n{font-family:var(--serif);font-size:clamp(1.7rem,6.6vw,2.5rem);line-height:1;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.stat:nth-child(1) .n{color:var(--blue)}.stat:nth-child(2) .n{color:var(--amber)}
+.stat:nth-child(3) .n{color:var(--green)}.stat:nth-child(4) .n{color:var(--ink)}
+.stat .l{font-size:.79rem;color:var(--soft);margin-top:.7rem;line-height:1.5}
+.stat .src{font-family:var(--mono);font-size:.7rem;color:var(--soft);margin-top:.65rem;
+  text-transform:uppercase;letter-spacing:.06em;overflow-wrap:anywhere}
+
+/* ---------- research questions ---------- */
+.rq{border-top:1px solid var(--hair);padding:1.25rem 0;display:grid;
+  grid-template-columns:3.6rem minmax(0,1fr);gap:1.3rem}
+.rq:last-of-type{border-bottom:1px solid var(--hair)}
+.rqid{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--amber);padding-top:.3rem}
+.rqq{font-weight:600;margin:0 0 .35rem;max-width:64ch}
+.rqa{margin:0;font-size:.89rem;color:var(--soft);max-width:64ch}
+
+/* ---------- pipeline ---------- */
+.pipe{display:flex;overflow-x:auto;margin:0 0 .6rem}
+.node{flex:1;min-width:8.6rem;border:1px solid var(--hair);border-right:0;padding:.9rem .85rem;
+  background:var(--bg)}
+.node:last-child{border-right:1px solid var(--hair)}
+.node .k{font-family:var(--mono);font-size:.61rem;letter-spacing:.1em;color:var(--soft);
+  text-transform:uppercase}
+.node .v{font-family:var(--serif);font-size:1.45rem;letter-spacing:-.02em;margin:.22rem 0 .12rem}
+.node .d{font-size:.72rem;color:var(--soft);line-height:1.42}
+.node.drop{background:var(--panel)}.node.drop .v{color:var(--amber)}
+.node.out .v{color:var(--blue)}
+
+/* ---------- figures ---------- */
+figure{margin:0 0 2.6rem;padding-top:.4rem}
+figure:last-child{margin-bottom:0}
+.figframe{border:1px solid var(--hair);background:var(--bg);padding:1.1rem;overflow-x:auto}
+figcaption{font-size:.82rem;color:var(--soft);line-height:1.6;margin-top:.85rem;max-width:78ch}
+figcaption .fignum{font-family:var(--mono);font-size:.67rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--amber);display:block;margin-bottom:.3rem}
+figcaption b{color:var(--ink)}
+/* No opacity here. Dimming --soft to 0.7 dropped contrast to about 3:1, under
+   the 4.5:1 AA floor. The colour alone gives 6.8:1. */
+figcaption .src{display:block;margin-top:.5rem;font-family:var(--mono);font-size:.72rem}
+.tableframe{padding:.4rem 1.1rem}
+
+/* ---------- data tables ---------- */
+.dtable{border-collapse:collapse;width:100%;font-size:.83rem;min-width:44rem}
+.dtable th,.dtable td{text-align:left;padding:.62rem .7rem;border-bottom:1px solid var(--hair);
+  vertical-align:top}
+.dtable thead th{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);
+  border-bottom:1.5px solid var(--ink);font-weight:600}
+.dtable tbody th{font-weight:600;max-width:22rem}
+.dtable .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.dtable .strong{font-weight:700;color:var(--blue)}
+.dtable .note{color:var(--soft);font-size:.78rem;max-width:24rem}
+.verdict{font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;padding:.2rem .5rem;
+  border:1px solid currentColor;white-space:nowrap}
+.verdict.ok{color:var(--green)}.verdict.part{color:var(--amber)}
+
+/* ---------- gallery ---------- */
+.lead{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem;margin:1.6rem 0 0}
+.leadcard{border:1px solid var(--hair);background:none;padding:0;text-align:left;font:inherit;
+  color:inherit;cursor:zoom-in;display:block;min-width:0}
+.leadcard:hover{border-color:var(--soft)}
+.leadcard img{width:100%;aspect-ratio:1;object-fit:cover}
+.leadbody{padding:.85rem .95rem 1rem}
+/* capitalize would give "King And Servant"; only the first letter should lift */
+.leadscene{font-size:1.02rem;font-weight:700;letter-spacing:-.01em}
+.leadscene::first-letter{text-transform:uppercase}
+.leadmeta{font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--soft);margin:.25rem 0 .5rem}
+.filters{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.4rem}
+.chip{font-size:.75rem;padding:.36rem .82rem;border:1px solid var(--hair);border-radius:99px;
+  color:var(--soft);cursor:pointer;background:none;font-family:inherit}
+.chip:hover{color:var(--ink)}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.gcount{font-size:.78rem;color:var(--soft);margin-bottom:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:1.1rem}
+.gcard{border:1px solid var(--hair);background:none;padding:0;text-align:left;font:inherit;
+  color:inherit;cursor:zoom-in;display:block}
+.gcard:hover{border-color:var(--soft)}
+.gcard img{width:100%;aspect-ratio:1;object-fit:cover}
+.gbody{padding:.6rem .7rem .7rem}
+.grow{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.45rem}
+.pill{font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;padding:.16rem .42rem;
+  border:1px solid var(--hair);color:var(--soft);text-transform:uppercase}
+.pill.b{border-color:var(--blue);color:var(--blue)}
+.pill.a{border-color:var(--amber);color:var(--amber)}
+.gout{font-size:.78rem;font-weight:600;line-height:1.4}
+.gout.euro{color:var(--blue)}.gout.noneuro{color:var(--green)}
+.gout.excluded{color:var(--vermillion)}.gout.baseline{color:var(--blue)}
+
+dialog{border:0;padding:0;max-width:min(64rem,94vw);background:var(--bg);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.72)}
+.lb{display:grid;grid-template-columns:1fr 20rem}
+.lb img{width:100%}
+.lbside{padding:1.3rem;overflow-y:auto;max-height:82vh}
+.lbside h4{margin:.9rem 0 .3rem;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);font-weight:600}
+.lbside p{font-size:.82rem;margin:0}
+.lbprompt{font-family:var(--mono);font-size:.71rem;line-height:1.6;background:var(--panel);
+  padding:.7rem;border-left:2px solid var(--amber);white-space:pre-wrap}
+.lbclose{position:absolute;top:.6rem;right:.7rem;background:var(--bg);border:1px solid var(--hair);
+  color:var(--ink);width:2rem;height:2rem;border-radius:50%;cursor:pointer;font-size:1rem;line-height:1}
+
+/* ---------- misc ---------- */
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.4rem}
+.cite{font-family:var(--mono);font-size:.74rem;line-height:1.7;background:var(--panel);
+  padding:1rem 1.1rem;border-left:2px solid var(--amber);white-space:pre-wrap;overflow-x:auto}
+.copybtn{margin-top:.7rem;font:inherit;font-size:.77rem;padding:.45rem .9rem;border:1px solid var(--ink);
+  background:none;color:var(--ink);cursor:pointer;border-radius:2px}
+.copybtn:hover{background:var(--ink);color:var(--bg)}
+.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(11rem,1fr));gap:1.2rem}
+.person{display:flex;gap:.75rem;align-items:center}
+.mono-av{width:2.9rem;height:2.9rem;border-radius:50%;background:var(--panel);border:1px solid var(--hair);
+  display:grid;place-items:center;font-family:var(--serif);font-size:1rem;color:var(--soft);flex:none}
+.person .nm{font-size:.85rem;font-weight:600;line-height:1.3}
+.person .af{font-size:.72rem;color:var(--soft)}
+.logos{display:flex;gap:1.4rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
+.logoslot{border:1px dashed var(--hair);padding:.9rem 1.4rem;font-size:.74rem;color:var(--soft);
+  border-radius:3px}
+.callout{border-left:3px solid var(--amber);padding:.2rem 0 .2rem 1rem;margin:1.4rem 0}
+footer{padding:2rem 3rem 4rem;font-size:.77rem;color:var(--soft);border-top:1px solid var(--hair)}
+
+@media(max-width:960px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--hair);
+    display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:center;padding:1rem 1.3rem}
+  .marksub{margin:0}
+  /* min-width:0 so the scroller can actually shrink; a flex item defaults to
+     min-width:auto and would otherwise push the page wider than the viewport. */
+  .steps{display:flex;gap:.9rem;margin:0;overflow-x:auto;flex:1 1 0;min-width:0}
+  .steps a{padding-left:1.5rem;white-space:nowrap;min-height:2.75rem}
+  .raillinks{display:none}.themebtn{width:auto;margin:0}
+  .band{padding:2.1rem 1.3rem}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bleed{grid-template-columns:repeat(4,1fr)}
+  .bleedcap{padding:.85rem 1.3rem}
+  .cols{grid-template-columns:minmax(0,1fr);gap:1.4rem}
+  .lead{grid-template-columns:minmax(0,1fr);gap:1rem}
+  .bylist{gap:0 1.4rem}
+  .lb{grid-template-columns:1fr}.lbside{max-height:none}
+  footer{padding:2rem 1.3rem 3rem}
+}
+@media print{
+  .rail,.filters,.copybtn,.themebtn{display:none}
+  .shell{grid-template-columns:1fr}.band{padding:1rem 0;break-inside:avoid}
+  figure{break-inside:avoid}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
