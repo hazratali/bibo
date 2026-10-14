@@ -87,6 +87,9 @@ A preprint is forthcoming. Until then, cite the project page and the code reposi
 Hazrat Ali · Baqar Jafri · Muhammad Muneeb Saad
 University of Stirling
 
+## Contact
+Reach out to [Dr. Hazrat Ali](https://hazratali.github.io/)
+
 ## Note on the images
 
 Every image is a generated model output, not a photograph of a real person. The race categories
