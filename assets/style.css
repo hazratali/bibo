@@ -93,7 +93,14 @@ p{margin:0 0 1rem;max-width:62ch}
 /* The paper title is the h1, so it is set smaller and tighter than a marketing
    headline would be, and the plain-language question sits below it. */
 #finding h1{font-size:clamp(1.55rem,2.9vw,2.25rem);line-height:1.18;letter-spacing:-.02em;
-  font-weight:700;max-width:30ch}
+  font-weight:700;max-width:none}
+/* Two tones: the short name in ink and large, the long description below it in the page blue,
+   lighter and smaller, so the eye takes the name first. Blue rather than amber: amber text on the
+   light background falls below the contrast large text needs. */
+#finding h1 .t-main{display:block;font-size:clamp(2.1rem,4.4vw,3.1rem);font-weight:800;
+  letter-spacing:-.035em;line-height:1.05;color:var(--ink);margin-bottom:.55rem}
+#finding h1 .t-sub{display:block;font-size:clamp(1.12rem,1.9vw,1.42rem);font-weight:500;
+  letter-spacing:-.01em;line-height:1.4;color:var(--blue);max-width:44ch}
 .bylist{list-style:none;display:flex;flex-wrap:wrap;gap:0 2.2rem;margin:1.5rem 0 0;padding:.95rem 0 0;
   border-top:2px solid var(--ink)}
 .bylist li{font-size:.87rem;line-height:1.45;padding:.2rem 0}
@@ -109,6 +116,10 @@ span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius
 .hero-av{width:3.6rem;height:3.6rem;border-radius:50%;object-fit:cover;object-position:50% 20%;
   border:1px solid var(--hair);background:var(--panel);flex:none}
 .leadrow{display:flex;align-items:center;gap:1rem}
+/* All three authors on one line under a single rule, wrapping only when the screen is too narrow. */
+.authors{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 2.4rem;margin:1.3rem 0 0;
+  padding-top:1rem;border-top:2px solid var(--ink)}
+.authors .bylist{margin:0;padding:0;border-top:0;gap:1rem 2.4rem}
 .bylist li{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.75rem;align-items:center}
 .bylist li .hero-av{grid-row:span 2}
 .hero-logos{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;margin-top:1.3rem}
