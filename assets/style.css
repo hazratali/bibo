@@ -116,12 +116,27 @@ span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius
 .hero-av{width:3.6rem;height:3.6rem;border-radius:50%;object-fit:cover;object-position:50% 20%;
   border:1px solid var(--hair);background:var(--panel);flex:none}
 .leadrow{display:flex;align-items:center;gap:1rem}
+/* Dr. Ali's Project Lead block, laid out like the other two authors: name, then affiliation on
+   the line below, with "Project Lead" as a small blue label above. Styling only: his markup and
+   text are untouched. The dash between name and affiliation is a bare text node, so it is hidden
+   by setting that paragraph's font size to zero and giving the name and affiliation their own. */
+.leadrow .lead-block{line-height:1.45}
+.leadrow .lead-block p{margin:0;max-width:none}
+.leadrow .lead-title{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:.15rem}
+.leadrow .lead-title + p{font-size:0}
+.leadrow .lead-title + p b{display:block;font-size:.87rem;font-weight:600}
+.leadrow .lead-title + p span{display:block;font-size:.78rem;color:var(--soft)}
 /* All three authors on one line under a single rule, wrapping only when the screen is too narrow. */
 .authors{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 2.4rem;margin:1.3rem 0 0;
   padding-top:1rem;border-top:2px solid var(--ink)}
 .authors .bylist{margin:0;padding:0;border-top:0;gap:1rem 2.4rem}
-.bylist li{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.75rem;align-items:center}
-.bylist li .hero-av{grid-row:span 2}
+/* name and affiliation sit together in the middle of the photo's height, as in the lead block */
+.bylist li{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:1fr auto auto 1fr;
+  column-gap:.75rem}
+.bylist li .hero-av{grid-row:1 / -1;grid-column:1}
+.bylist li b{grid-row:2;grid-column:2}
+.bylist li span{grid-row:3;grid-column:2}
 .hero-logos{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;margin-top:1.3rem}
 /* Logos sit on white in both themes: the Stirling mark is a single dark green that would vanish
    on the dark background, and the official colours should not be altered. */
