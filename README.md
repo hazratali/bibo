@@ -3,7 +3,7 @@
 **A Human-Validated Audit of Default-European Race-to-Role Assignment for High-Status Roles
 across Four Text-to-Image Models**
 
-Project page: **https://hazratali.github.io/race/**
+Project page: **https://hazratali.github.io/bibo/**
 
 ---
 
