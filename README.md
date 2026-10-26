@@ -84,7 +84,7 @@ A preprint is forthcoming. Until then, cite the project page and the code reposi
 
 ## Authors
 
-Hazrat Ali · Baqar Jafri · Muhammad Muneeb Saad
+Hazrat Ali · Muhammad Muneeb Saad · Baqar Jafri
 
 University of Stirling
 
@@ -93,6 +93,6 @@ Reach out to [Dr. Hazrat Ali](https://hazratali.github.io/)
 
 ## Note on the images
 
-Every image is a generated model output, not a photograph of a real person. The race categories
-are those used in the prompts and in the labelling scheme, and are not a claim about anyone's
-identity.
+Every study image is a generated model output, not a photograph of a real person. The only real
+photographs are the author headshots in `assets/img/team/`. The race categories are those used
+in the prompts and in the labelling scheme, and are not a claim about anyone's identity.

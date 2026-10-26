@@ -1,17 +1,6 @@
 /* BIBO project page behaviour. No dependencies, no external requests. */
 
-/* ------------------------------------------------------------------
- * EDIT ME. Roles below are taken from the repository README and from the
- * manuscript review record. The final author list and author ORDER are not
- * settled, so this is presented as contributors, not as an author line.
- * Add `photo: 'assets/img/team/name.jpg'` to any entry to replace the
- * monogram with a headshot.
- * ---------------------------------------------------------------- */
-const TEAM = [
-  { name: 'Dr. Hazrat Ali', org: 'University of Stirling' },
-  { name: 'Baqar Jafri', org: 'University of Stirling' },
-  { name: 'Muhammad Muneeb Saad', org: '', pending: 'affiliation to confirm' }
-];
+/* The author names, photos and logos are in the byline at the top of index.html. */
 
 /* The three images that open the Evidence section. All are the adversarial
    ordering, meaning the prompt named the European second. */
@@ -35,26 +24,95 @@ function renderFigures() {
   const F = window.BIBO_FIGURES;
   ['fig1', 'fig2', 'fig3', 'fig4', 'fig5', 'fig6', 'tab1', 'tab2'].forEach(id => {
     const host = document.getElementById(id);
-    if (host && F[id]) host.innerHTML = F[id].render();
+    if (!host || !F[id]) return;
+    host.innerHTML = F[id].render();
+    if (F[id].interactive) {
+      host.dataset.interactive = '';
+      host.insertAdjacentHTML('afterend', '<p class="charthint">Hover over or tap a bar for its exact count.'
+        + (host.querySelector('.lg') ? ' Select a legend entry to highlight that series.' : '') + '</p>');
+    }
+    if (F[id].grow) host.dataset.grow = '';
   });
 }
 
-/* ---------------- team ---------------- */
-function renderTeam() {
-  const host = $('#team'); if (!host) return;
-  host.innerHTML = '';
-  TEAM.forEach(p => {
-    const initials = p.name.replace(/^Dr\.?\s+/, '').split(/\s+/)
-      .map(w => w[0]).slice(0, 2).join('');
-    const av = p.photo
-      ? `<img class="mono-av" src="${esc(p.photo)}" alt="">`
-      : `<div class="mono-av" aria-hidden="true">${esc(initials)}</div>`;
-    const org = p.org
-      ? `<div class="af">${esc(p.org)}</div>`
-      : `<div class="af pending">${esc(p.pending || '')}</div>`;
-    host.appendChild(el('div', 'person',
-      `${av}<div><div class="nm">${esc(p.name)}</div>${org}</div>`));
+/* ---------------- interactive bar charts ---------------- */
+/* Hover, tap or keyboard focus on a bar shows its exact count and dims the other bars, so the one
+   being read stands out. Selecting a legend entry holds that series highlighted until it is
+   selected again. One shared tooltip, a few listeners per chart, no library. */
+function chartInteractions() {
+  const frames = [...document.querySelectorAll('.figframe[data-interactive]')];
+  if (!frames.length) return;
+  const tip = el('div', 'charttip'); tip.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(tip);
+
+  const show = (bar, x, y) => {
+    const [head, ...rest] = bar.dataset.tip.split('|');
+    tip.innerHTML = `<b>${esc(head)}</b>${rest.map(l => esc(l)).join('<br>')}`;
+    /* keep the tooltip inside the viewport, and flip it below the pointer near the top edge */
+    const w = tip.offsetWidth, h = tip.offsetHeight, pad = 8;
+    tip.style.left = Math.min(Math.max(x, w / 2 + pad), innerWidth - w / 2 - pad) + 'px';
+    tip.style.top = y + 'px';
+    tip.classList.toggle('below', y - h - 14 < 0);
+    tip.classList.add('on');
+    const f = bar.closest('.figframe');
+    f.querySelectorAll('.hot').forEach(n => n.classList.remove('hot'));
+    bar.classList.add('hot'); f.classList.add('hl');
+  };
+  const hide = () => {
+    tip.classList.remove('on');
+    frames.forEach(f => { f.classList.remove('hl'); f.querySelectorAll('.hot').forEach(n => n.classList.remove('hot')); });
+  };
+  const pin = (f, g) => {
+    const s = g.dataset.s, on = f.dataset.pin !== s;
+    if (on) f.dataset.pin = s; else delete f.dataset.pin;
+    f.classList.toggle('pinned', on);
+    f.querySelectorAll('[data-s]').forEach(n => n.classList.toggle('pin', on && n.dataset.s === s));
+    f.querySelectorAll('.lg').forEach(n => n.setAttribute('aria-pressed', String(on && n.dataset.s === s)));
+  };
+
+  frames.forEach(f => {
+    f.addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse') return;
+      const bar = e.target.closest('[data-tip]');
+      if (bar) show(bar, e.clientX, e.clientY); else hide();
+    });
+    f.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') hide(); });
+    /* touch and pen: a tap shows the tooltip, a tap anywhere else clears it */
+    f.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse') return;
+      const bar = e.target.closest('[data-tip]');
+      if (bar) { const r = bar.getBoundingClientRect(); show(bar, r.left + r.width / 2, r.top); }
+    });
+    f.addEventListener('focusin', e => {
+      const bar = e.target.closest('[data-tip]');
+      if (bar) { const r = bar.getBoundingClientRect(); show(bar, r.left + r.width / 2, r.top); }
+    });
+    f.addEventListener('focusout', hide);
+    f.addEventListener('click', e => { const g = e.target.closest('.lg'); if (g) pin(f, g); });
+    f.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { hide(); return; }
+      const g = e.target.closest('.lg');
+      if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pin(f, g); }
+    });
   });
+  document.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse' && !e.target.closest('.figframe [data-tip]')) hide();
+  });
+  addEventListener('scroll', hide, { passive: true });
+}
+
+/* Bars draw in once, when each chart first scrolls into view. Skipped entirely where the
+   browser lacks IntersectionObserver or the reader prefers reduced motion, so the bars are
+   never left hidden. */
+function chartEntrance() {
+  const frames = [...document.querySelectorAll('.figframe[data-grow]')];
+  if (!frames.length || !('IntersectionObserver' in window)
+    || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.documentElement.classList.add('anim');
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: 0.25 });
+  frames.forEach(f => io.observe(f));
 }
 
 /* ---------------- gallery ---------------- */
@@ -89,15 +147,12 @@ function renderLead() {
   });
 }
 
+/* The four opening images are in index.html, so they show even if the gallery data fails to
+   load. Once it loads, each one opens the same lightbox as the gallery, with its prompt. */
 function renderStrip() {
-  const strip = $('#strip'); if (!strip) return;
-  strip.innerHTML = '';
-  CARDS.filter(c => c.group === 'baseline').slice(0, 8).forEach(c => {
-    const img = el('img');
-    img.src = c.thumb; img.loading = 'lazy'; img.decoding = 'async';
-    img.alt = `Model output for the ${c.scene} scene. No race was named in the prompt. `
-      + `The person holding the status prop was rendered with a white skin tone.`;
-    strip.appendChild(img);
+  document.querySelectorAll('#strip .stripcard').forEach(b => {
+    const c = CARDS.find(card => card.slot === b.dataset.slot);
+    if (c) b.onclick = () => openLightbox(c);
   });
 }
 
@@ -195,7 +250,8 @@ function copyCite() {
 
 /* ---------------- boot ---------------- */
 renderFigures();
-renderTeam();
+chartInteractions();
+chartEntrance();
 theme();
 copyCite();
 scrollSpy();

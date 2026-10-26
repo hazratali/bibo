@@ -25,10 +25,13 @@ html:not([data-theme="light"]) body.auto-dark{
 }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:1rem}
+/* Root at 112.5% (18px in a default browser) rather than 16px, for readability. Every size on
+   the page is in rem, so text, spacing and figures scale together and the proportions hold. A
+   percentage, not px, so a reader's own browser font setting still applies on top. */
+html{font-size:112.5%;scroll-behavior:smooth;scroll-padding-top:1rem}
 body{
   margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-  font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;
+  font-size:1rem;line-height:1.62;-webkit-font-smoothing:antialiased;
 }
 img{max-width:100%;display:block}
 a{color:var(--ink)}
@@ -84,7 +87,7 @@ h2{font-size:1.55rem;line-height:1.2;letter-spacing:-.02em;font-weight:700;margi
 h3{font-size:1.18rem;font-weight:700;letter-spacing:-.01em;margin:2.4rem 0 .6rem}
 p{margin:0 0 1rem;max-width:62ch}
 .lede{font-size:1.09rem;color:var(--soft);max-width:58ch}
-.small{font-size:.88rem;color:var(--soft)}
+.small{font-size:.94rem;color:var(--soft)}
 
 /* ---------- hero ---------- */
 /* The paper title is the h1, so it is set smaller and tighter than a marketing
@@ -101,6 +104,21 @@ span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius
   padding:.1rem .45rem;font-size:.74rem;font-style:italic}
 .bylist span.pending{background:none;border:0;padding:0}
 
+/* Author photos and institution logos in the byline. The Project Lead block is Dr. Ali's own
+   markup and is left exactly as he wrote it; .leadrow only places his photo beside it. */
+.hero-av{width:3.6rem;height:3.6rem;border-radius:50%;object-fit:cover;object-position:50% 20%;
+  border:1px solid var(--hair);background:var(--panel);flex:none}
+.leadrow{display:flex;align-items:center;gap:1rem}
+.bylist li{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.75rem;align-items:center}
+.bylist li .hero-av{grid-row:span 2}
+.hero-logos{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;margin-top:1.3rem}
+/* Logos sit on white in both themes: the Stirling mark is a single dark green that would vanish
+   on the dark background, and the official colours should not be altered. */
+.logotile{display:flex;align-items:center;justify-content:center;background:#fff;
+  border:1px solid var(--hair);border-radius:4px;padding:.55rem .9rem;height:3.5rem}
+.logotile:hover{border-color:var(--soft)}
+.logotile img{height:100%;width:auto;max-width:11rem}
+
 .explainer{margin-top:2.2rem;padding-top:1.5rem;border-top:1px solid var(--hair)}
 .exq{font-family:var(--serif);font-size:clamp(1.3rem,2.6vw,1.85rem);line-height:1.3;
   letter-spacing:-.015em;margin:0 0 .9rem;max-width:26ch;color:var(--ink)}
@@ -111,11 +129,21 @@ span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius
 .links a.ghost{border-color:var(--hair);color:var(--soft);font-weight:400}
 .links a.off{border-style:dashed;opacity:.6;pointer-events:none}
 
-.bleed{display:grid;grid-template-columns:repeat(8,1fr);border-top:2px solid var(--ink)}
-.bleed img{width:100%;aspect-ratio:1;object-fit:cover}
-.bleedcap{padding:.85rem 3rem;font-size:.8rem;color:var(--soft);display:flex;
-  justify-content:space-between;gap:2rem;border-bottom:1px solid var(--hair);flex-wrap:wrap}
-.bleedcap b{color:var(--ink)}
+/* Opening image tile: four images, one per model, set ahead of the plain-terms question. Four
+   across on a wide screen, two by two below 720px. */
+.strip{margin:2rem 0 0}
+.stripgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.8rem}
+.stripcard{border:1px solid var(--hair);background:none;padding:0;margin:0;font:inherit;
+  color:inherit;text-align:left;cursor:zoom-in;display:block;min-width:0}
+.stripcard:hover{border-color:var(--soft)}
+.stripcard img{width:100%;height:auto;aspect-ratio:1;object-fit:cover}
+.stripmeta{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--soft);padding:.5rem .6rem .55rem;line-height:1.4}
+.stripcap{font-size:.88rem;color:var(--soft);display:flex;justify-content:space-between;
+  gap:.3rem 2rem;flex-wrap:wrap;margin-top:.85rem}
+.stripcap span{max-width:none}
+.stripcap b{color:var(--ink)}
+@media(max-width:720px){.stripgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* ---------- stats ---------- */
 /* minmax(0,1fr) rather than 1fr: the source filenames are long unbreakable
@@ -128,7 +156,7 @@ span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius
   letter-spacing:-.03em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .stat:nth-child(1) .n{color:var(--blue)}.stat:nth-child(2) .n{color:var(--amber)}
 .stat:nth-child(3) .n{color:var(--green)}.stat:nth-child(4) .n{color:var(--ink)}
-.stat .l{font-size:.79rem;color:var(--soft);margin-top:.7rem;line-height:1.5}
+.stat .l{font-size:.85rem;color:var(--soft);margin-top:.7rem;line-height:1.5}
 .stat .src{font-family:var(--mono);font-size:.7rem;color:var(--soft);margin-top:.65rem;
   text-transform:uppercase;letter-spacing:.06em;overflow-wrap:anywhere}
 
@@ -138,7 +166,8 @@ span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius
 .rq:last-of-type{border-bottom:1px solid var(--hair)}
 .rqid{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--amber);padding-top:.3rem}
 .rqq{font-weight:600;margin:0 0 .35rem;max-width:64ch}
-.rqa{margin:0;font-size:.89rem;color:var(--soft);max-width:64ch}
+.rqlabel{font-weight:800}
+.rqa{margin:0;font-size:.95rem;color:var(--soft);max-width:64ch}
 
 /* ---------- pipeline ---------- */
 .pipe{display:flex;overflow-x:auto;margin:0 0 .6rem}
@@ -156,7 +185,7 @@ span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius
 figure{margin:0 0 2.6rem;padding-top:.4rem}
 figure:last-child{margin-bottom:0}
 .figframe{border:1px solid var(--hair);background:var(--bg);padding:1.1rem;overflow-x:auto}
-figcaption{font-size:.82rem;color:var(--soft);line-height:1.6;margin-top:.85rem;max-width:78ch}
+figcaption{font-size:.9rem;color:var(--soft);line-height:1.6;margin-top:.85rem;max-width:78ch}
 figcaption .fignum{font-family:var(--mono);font-size:.67rem;letter-spacing:.12em;
   text-transform:uppercase;color:var(--amber);display:block;margin-bottom:.3rem}
 figcaption b{color:var(--ink)}
@@ -164,6 +193,41 @@ figcaption b{color:var(--ink)}
    the 4.5:1 AA floor. The colour alone gives 6.8:1. */
 figcaption .src{display:block;margin-top:.5rem;font-family:var(--mono);font-size:.72rem}
 .tableframe{padding:.4rem 1.1rem}
+
+/* ---------- interactive bar charts ---------- */
+/* Hover, tap or keyboard focus on a bar shows its exact count and dims the other bars; a legend
+   entry, when clicked, holds its series highlighted. Plain CSS and a few listeners, no library. */
+.figframe [data-tip]{cursor:pointer;transition:opacity .15s ease}
+.figframe [data-tip]:focus{outline:none}
+.figframe [data-tip]:focus-visible{stroke:var(--ink);stroke-width:2.5}
+.figframe.hl [data-tip]:not(.hot){opacity:.3}
+.figframe.pinned [data-tip]:not(.pin){opacity:.18}
+.figframe.pinned.hl [data-tip].hot{opacity:1}
+.figframe .lg{cursor:pointer}
+.figframe .lg:focus{outline:none}
+.figframe .lg:focus-visible rect{stroke:var(--ink);stroke-width:2}
+.figframe.pinned .lg:not(.pin){opacity:.45}
+.figframe .lg.pin text{text-decoration:underline;fill:var(--ink)}
+.charttip{position:fixed;left:0;top:0;z-index:50;pointer-events:none;max-width:17rem;
+  background:var(--ink);color:var(--bg);font-size:.8rem;line-height:1.45;padding:.5rem .7rem;
+  border-radius:3px;box-shadow:0 4px 14px rgba(0,0,0,.18);opacity:0;
+  transform:translate(-50%,calc(-100% - 12px));transition:opacity .12s ease}
+.charttip.below{transform:translate(-50%,16px)}
+.charttip.on{opacity:1}
+.charttip b{display:block;margin-bottom:.1rem}
+.charthint{font-size:.8rem;color:var(--soft);margin:.55rem 0 0}
+/* Bars grow in once, when the chart first scrolls into view. Screen only, and off for readers
+   who ask for reduced motion; the html.anim flag is set by script only where it can run. */
+@media screen and (prefers-reduced-motion:no-preference){
+  .anim .figframe[data-grow] .gb{transform-box:fill-box;transform-origin:50% 100%;
+    transform:scaleY(0);transition:transform .7s cubic-bezier(.2,.7,.2,1),opacity .15s ease}
+  .anim .figframe[data-grow] .gh{transform-box:view-box;transform:scaleX(0);
+    transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+  .anim .figframe[data-grow] .vl{opacity:0;transition:opacity .35s ease .5s}
+  .anim .figframe[data-grow].in .gb,
+  .anim .figframe[data-grow].in .gh{transform:none}
+  .anim .figframe[data-grow].in .vl{opacity:1}
+}
 
 /* ---------- data tables ---------- */
 .dtable{border-collapse:collapse;width:100%;font-size:.83rem;min-width:44rem}
@@ -232,15 +296,6 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
 .copybtn{margin-top:.7rem;font:inherit;font-size:.77rem;padding:.45rem .9rem;border:1px solid var(--ink);
   background:none;color:var(--ink);cursor:pointer;border-radius:2px}
 .copybtn:hover{background:var(--ink);color:var(--bg)}
-.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(11rem,1fr));gap:1.2rem}
-.person{display:flex;gap:.75rem;align-items:center}
-.mono-av{width:2.9rem;height:2.9rem;border-radius:50%;background:var(--panel);border:1px solid var(--hair);
-  display:grid;place-items:center;font-family:var(--serif);font-size:1rem;color:var(--soft);flex:none}
-.person .nm{font-size:.85rem;font-weight:600;line-height:1.3}
-.person .af{font-size:.72rem;color:var(--soft)}
-.logos{display:flex;gap:1.4rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
-.logoslot{border:1px dashed var(--hair);padding:.9rem 1.4rem;font-size:.74rem;color:var(--soft);
-  border-radius:3px}
 .callout{border-left:3px solid var(--amber);padding:.2rem 0 .2rem 1rem;margin:1.4rem 0}
 footer{padding:2rem 3rem 4rem;font-size:.77rem;color:var(--soft);border-top:1px solid var(--hair)}
 
@@ -256,8 +311,6 @@ footer{padding:2rem 3rem 4rem;font-size:.77rem;color:var(--soft);border-top:1px 
   .raillinks{display:none}.themebtn{width:auto;margin:0}
   .band{padding:2.1rem 1.3rem}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .bleed{grid-template-columns:repeat(4,1fr)}
-  .bleedcap{padding:.85rem 1.3rem}
   .cols{grid-template-columns:minmax(0,1fr);gap:1.4rem}
   .lead{grid-template-columns:minmax(0,1fr);gap:1rem}
   .bylist{gap:0 1.4rem}

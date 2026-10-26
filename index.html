@@ -45,15 +45,24 @@
   <h1>Bias In, Bias Out: A Human-Validated Audit of Default-European Race-to-Role Assignment
     for High-Status Roles across Four Text-to-Image Models</h1>
 
+  <div class="leadrow">
+  <img class="hero-av" src="assets/img/team/hazrat-ali.webp" width="360" height="360" alt="" decoding="async">
   <div class="lead-block">
   <p class="lead-title">Project Lead</p>
   <p><b>Dr. Hazrat Ali</b> — <span>University of Stirling</span></p>
   </div>
+  </div>
   <ol class="bylist">
     <!-- <li><b>Dr. Hazrat Ali</b><span>University of Stirling</span></li> -->
-    <li><b>Baqar Jafri</b><span>University of Stirling</span></li>
-    <li><b>Muhammad Muneeb Saad</b><span>Munster Technological University</span></li>
+    <li><img class="hero-av" src="assets/img/team/muneeb-saad.webp" width="360" height="360" alt="" decoding="async"><b>Dr. Muhammad Muneeb Saad</b><span>Munster Technological University</span></li>
+    <li><img class="hero-av" src="assets/img/team/baqar-jafri.webp" width="360" height="360" alt="" decoding="async"><b>Baqar Jafri</b><span>University of Stirling</span></li>
   </ol>
+  <div class="hero-logos" role="list" aria-label="Institutions">
+    <a class="logotile" role="listitem" href="https://www.stir.ac.uk/">
+      <img src="assets/img/logos/stirling.svg" width="662" height="166" alt="University of Stirling"></a>
+    <a class="logotile" role="listitem" href="https://www.mtu.ie/">
+      <img src="assets/img/logos/mtu.png" width="720" height="207" alt="Munster Technological University"></a>
+  </div>
 
 
   <div class="links">
@@ -63,6 +72,46 @@
     <a class="ghost" href="#data">Full corpus</a>
   </div>
 
+  <!-- Four images, one per model: the first no-race-named image of each model in
+       assets/gallery.json. Chosen by that rule, like every other image on the page. -->
+  <figure class="strip">
+    <div class="stripgrid" id="strip">
+      <button class="stripcard" type="button" data-slot="base_gpt_0">
+        <img src="assets/img/gallery/base_gpt_0.webp" width="900" height="900" decoding="async"
+          srcset="assets/img/gallery/base_gpt_0_t.webp 340w, assets/img/gallery/base_gpt_0.webp 900w"
+          sizes="(max-width: 720px) 46vw, 22vw"
+          alt="GPT Image 1.5 output for the banker and customer scene. No race was named in the prompt. The person holding the status prop was rendered with a white skin tone.">
+        <span class="stripmeta">GPT Image 1.5 · banker and customer</span>
+      </button>
+      <button class="stripcard" type="button" data-slot="base_grok_0">
+        <img src="assets/img/gallery/base_grok_0.webp" width="900" height="900" decoding="async"
+          srcset="assets/img/gallery/base_grok_0_t.webp 340w, assets/img/gallery/base_grok_0.webp 900w"
+          sizes="(max-width: 720px) 46vw, 22vw"
+          alt="Grok Imagine output for the professor and student scene. No race was named in the prompt. The person holding the status prop was rendered with a white skin tone.">
+        <span class="stripmeta">Grok Imagine · professor and student</span>
+      </button>
+      <button class="stripcard" type="button" data-slot="base_imagen_0">
+        <img src="assets/img/gallery/base_imagen_0.webp" width="900" height="900" decoding="async"
+          srcset="assets/img/gallery/base_imagen_0_t.webp 340w, assets/img/gallery/base_imagen_0.webp 900w"
+          sizes="(max-width: 720px) 46vw, 22vw"
+          alt="Imagen 4 output for the CEO and receptionist scene. No race was named in the prompt. The person holding the status prop was rendered with a white skin tone.">
+        <span class="stripmeta">Imagen 4 · CEO and receptionist</span>
+      </button>
+      <button class="stripcard" type="button" data-slot="base_sd_0">
+        <img src="assets/img/gallery/base_sd_0.webp" width="900" height="900" decoding="async"
+          srcset="assets/img/gallery/base_sd_0_t.webp 340w, assets/img/gallery/base_sd_0.webp 900w"
+          sizes="(max-width: 720px) 46vw, 22vw"
+          alt="SD 3.5 Large output for the police officer and thief scene. No race was named in the prompt. The person holding the status prop was rendered with a white skin tone.">
+        <span class="stripmeta">SD 3.5 Large · police officer and thief</span>
+      </button>
+    </div>
+    <figcaption class="stripcap">
+      <span><b>No race was named in any of these prompts.</b> In each one, the person holding the
+        status prop was rendered with a white skin tone.</span>
+      <span>4 of the 96 no-race-named images, one per model. Select an image to see its prompt.</span>
+    </figcaption>
+  </figure>
+
   <div class="explainer">
     <p class="exq">In plain terms: who does the model put in charge when nobody tells it?</p>
     <p class="lede">Give a text-to-image system two people, name two races, hand one of them a
@@ -71,13 +120,6 @@
       than to the other race, and it kept doing so when the prompt named the European second.</p>
   </div>
 </section>
-
-<div class="bleed" id="strip" aria-label="Eight model outputs generated from prompts that named no race"></div>
-<p class="bleedcap">
-  <span><b>No race was named in any of these prompts.</b> In each one, the person holding the
-    status prop was rendered with a white skin tone.</span>
-  <span>8 of the 96 no-race-named images</span>
-</p>
 
 <div class="stats">
   <div class="stat"><div class="n">100%</div>
@@ -114,18 +156,23 @@
     coder.</p>
 
   <div class="rq"><div class="rqid">RQ1</div><div>
-    <p class="rqq">When a model depicts a high-status role, does it reach for a European-presenting
-      person, both when no race is named and when two races are named?</p>
-    <p class="rqa">Yes in three of the four models, and in every one of the twelve scenes.</p></div></div>
+    <p class="rqq"><span class="rqlabel">Assignment.</span> When a prompt names two roles of unequal
+      status and two races but binds neither, which race do T2I systems place in the high-status
+      role, and how do they render the status holder when no race is named?</p>
+    <p class="rqa">The European-presenting person. All four models favoured that person, three of
+      them confirmed under both analyses, and the pattern held in every one of the twelve scenes.
+      With no race named, three of the four models rendered the status holder with a white skin
+      tone well above chance.</p></div></div>
   <div class="rq"><div class="rqid">RQ2</div><div>
-    <p class="rqq">Is that a learned race-to-status association, or an artefact of which race the
-      prompt happens to name first?</p>
+    <p class="rqq"><span class="rqlabel">Race or order.</span> How much of the observed assignment
+      reflects a race preference rather than the order in which the two races are named?</p>
     <p class="rqa">Mention order has a large effect, but a residual preference survives adversarial
       ordering in GPT Image 1.5 and Grok Imagine. In SD 3.5 Large it does not, and the apparent
       preference there is order-driven.</p></div></div>
   <div class="rq"><div class="rqid">RQ3</div><div>
-    <p class="rqq">How faithfully do the models render the requested two-person, two-race,
-      prop-held scene in the first place?</p>
+    <p class="rqq"><span class="rqlabel">Fidelity.</span> How faithfully do the systems render the
+      requested two-person, two-race scene, and how does fidelity shape what an audit can
+      conclude?</p>
     <p class="rqa">From 95.8% of outputs down to 35.4%. Prompt fidelity is reported as a finding in
       its own right, because it sets the denominator every bias number is measured over.</p></div></div>
 </section>
@@ -244,8 +291,7 @@
       <b>Instruction-following falls sharply from the most compliant model to the least.</b> How
       each model handled its 240 two-race prompts. The share rendered as instructed drops from
       95.8% to 35.4%. The failure profiles differ: Imagen 4 mostly returns the wrong number of
-      people, while SD 3.5 Large mostly collapses the two prompted races into one. Hover any
-      segment for its count.
+      people, while SD 3.5 Large mostly collapses the two prompted races into one.
       <span class="src">Source: fidelity_summary.csv</span>
     </figcaption>
   </figure>
@@ -385,15 +431,15 @@
     </div>
   </div>
 
-  <h3>Authors</h3>
-  <div class="team" id="team"></div>
 </section>
 
 <footer>
   <p>Conducted at the <b>University of Stirling</b>.</p>
-  <p>All images on this page are generated model outputs, not photographs of real people. Race
-    categories are the categories used in the prompts and in the labelling scheme; they are not a
-    claim about anyone&rsquo;s identity. Figures use a colourblind-safe palette.</p>
+  <p>Every image of the study, in the opening tile, the figures and the gallery, is a generated
+    model output, not a photograph of a real person. The author photographs are the only real
+    photographs on the page. Race categories are the categories used in the prompts and in the
+    labelling scheme; they are not a claim about anyone&rsquo;s identity. Figures use a
+    colourblind-safe palette.</p>
   <p>BIBO · a protocol-archived audit · every image hashed and traceable to the released corpus</p>
 </footer>
 </main>

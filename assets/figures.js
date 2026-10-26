@@ -19,14 +19,35 @@ const OK = {
 const INK = 'var(--ink)', SOFT = 'var(--soft)', HAIR = 'var(--hair)', CHANCE = 'var(--chance)';
 const FONT = "font-family=\"var(--fig-font)\"";
 
-const svg = (w, h, body) =>
+/* Named xesc, not esc: figures.js and app.js share one global scope, and app.js has its own esc. */
+const xesc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* A static figure is one image to a screen reader. An interactive one is a group, so each bar
+   can be reached and read on its own. */
+const svg = (w, h, body, label) =>
   `<svg viewBox="0 0 ${w} ${h}" width="100%" preserveAspectRatio="xMidYMid meet"
-        role="img" ${FONT}>${body}</svg>`;
+        ${label ? `role="group" aria-label="${xesc(label)}"` : 'role="img"'} ${FONT}>${body}</svg>`;
 
 const txt = (x, y, s, o = {}) =>
   `<text x="${x}" y="${y}" font-size="${o.size || 12}" fill="${o.fill || INK}"
      text-anchor="${o.anchor || 'start'}"${o.weight ? ` font-weight="${o.weight}"` : ''}${
-    o.style ? ` font-style="${o.style}"` : ''}>${s}</text>`;
+    o.style ? ` font-style="${o.style}"` : ''}${o.cls ? ` class="${o.cls}"` : ''}>${s}</text>`;
+
+/* Interactive bars. `lines` is what the tooltip shows, first line in bold, and what a screen
+   reader hears; `s` is the series the bar belongs to, which its legend entry highlights. */
+const pct = (k, n) => (k / n * 100).toFixed(1) + '%';
+const tipAttrs = (lines, s) =>
+  ` data-tip="${xesc(lines.join('|'))}" aria-label="${xesc(lines.join('. '))}" tabindex="0"`
+  + ` role="img"${s != null ? ` data-s="${s}"` : ''}`;
+
+/* A clickable legend entry: swatch, label and a transparent hit area over both. */
+const legendItem = (s, x, y, sw, color, label, size, textW) =>
+  `<g class="lg" data-s="${s}" tabindex="0" role="button" aria-pressed="false"
+      aria-label="Highlight ${xesc(label)}">
+     <rect x="${x - 3}" y="${y - sw - 3}" width="${sw + textW + 12}" height="${sw + 8}" fill="transparent"/>
+     <rect x="${x}" y="${y - sw}" width="${sw}" height="${sw}" fill="${color}"/>
+     ${txt(x + sw + 7, y, label, { size, fill: SOFT })}
+   </g>`;
 
 /* ------------------------------------------------------------------ */
 /* FIGURE 1 - the two-race design, and what reversing the order means. */
@@ -88,22 +109,29 @@ function figure1() {
 /* ------------------------------------------------------------------ */
 /* FIGURE 2 - three probes, per model.                                 */
 /* ------------------------------------------------------------------ */
+/* k = [count, labelled images] behind each share, for the tooltips. No race named:
+   baseline_default_race.csv (European / n_codeable). Two races named: dsb_primary.csv
+   (EUROPEAN_HS / n_valid). Adversarial ordering: dsb_by_order.csv, O2 row (P_European x n). */
 const F2 = [
-  { name: 'GPT Image 1.5', n: 230, v: [1.000, 0.817, 0.638] },
-  { name: 'Grok Imagine', n: 200, v: [0.857, 0.830, 0.703] },
-  { name: 'Imagen 4', n: 173, v: [0.857, 0.746, 0.571] },
-  { name: 'SD 3.5 Large', n: 85, v: [0.667, 0.694, 0.351] }
+  { name: 'GPT Image 1.5', n: 230, v: [1.000, 0.817, 0.638], k: [[22, 22], [188, 230], [74, 116]] },
+  { name: 'Grok Imagine', n: 200, v: [0.857, 0.830, 0.703], k: [[18, 21], [166, 200], [71, 101]] },
+  { name: 'Imagen 4', n: 173, v: [0.857, 0.746, 0.571], k: [[18, 21], [129, 173], [52, 91]] },
+  { name: 'SD 3.5 Large', n: 85, v: [0.667, 0.694, 0.351], k: [[12, 18], [59, 85], [13, 37]] }
 ];
 const F2_LABELS = ['No race named', 'Two races named', 'Adversarial ordering'];
 const F2_COLS = [OK.blue, OK.amber, OK.green];
+const F2_TIP = [
+  (k, n) => `No race named: ${k} of ${n} status holders had a white skin tone (${pct(k, n)})`,
+  (k, n) => `Two races named: the European-presenting person held the role in ${k} of ${n} images (${pct(k, n)})`,
+  (k, n) => `European named second: the European-presenting person held the role in ${k} of ${n} images (${pct(k, n)})`
+];
 
 function figure2() {
   const W = 900, H = 400, mL = 52, mR = 26, mT = 56, mB = 70;
   const pw = W - mL - mR, ph = H - mT - mB, y = v => mT + ph - v * ph;
   let s = '';
   F2_LABELS.forEach((l, i) => {
-    s += `<rect x="${mL + i * 190}" y="14" width="11" height="11" fill="${F2_COLS[i]}"/>`;
-    s += txt(mL + i * 190 + 18, 24, l, { size: 12, fill: SOFT });
+    s += legendItem(i, mL + i * 190, 25, 11, F2_COLS[i], l, 12, l.length * 6.6);
   });
   [0, 0.25, 0.5, 0.75, 1].forEach(t => {
     const em = t === 0.5;
@@ -117,8 +145,10 @@ function figure2() {
     const bw = gw / 4.4;
     d.v.forEach((v, i) => {
       const x = mL + gi * gw + gw * 0.14 + i * bw;
-      s += `<rect x="${x}" y="${y(v)}" width="${bw - 6}" height="${ph - y(v) + mT}" fill="${F2_COLS[i]}"/>`;
-      s += txt(x + (bw - 6) / 2, y(v) - 7, Math.round(v * 100), { size: 11.5, fill: SOFT, anchor: 'middle' });
+      const [k, n] = d.k[i];
+      s += `<rect class="gb" x="${x}" y="${y(v)}" width="${bw - 6}" height="${ph - y(v) + mT}"
+              fill="${F2_COLS[i]}"${tipAttrs([d.name, F2_TIP[i](k, n)], i)}/>`;
+      s += txt(x + (bw - 6) / 2, y(v) - 7, Math.round(v * 100), { size: 11.5, fill: SOFT, anchor: 'middle', cls: 'vl' });
     });
     s += txt(mL + gi * gw + gw / 2, mT + ph + 22, d.name, { size: 13, weight: '600', anchor: 'middle' });
     s += txt(mL + gi * gw + gw / 2, mT + ph + 39, `n = ${d.n} labelled images`,
@@ -126,7 +156,7 @@ function figure2() {
   });
   s += txt(14, mT + ph / 2, 'Share holding the high-status role', { size: 11, fill: SOFT, anchor: 'middle' })
     .replace('<text', `<text transform="rotate(-90 14 ${mT + ph / 2})"`);
-  return svg(W, H, s);
+  return svg(W, H, s, 'Figure 2: three probes, four models. Bar chart.');
 }
 
 /* ------------------------------------------------------------------ */
@@ -153,19 +183,25 @@ function figure3() {
   const slot = pw / F3.length, bw = slot * 0.4;
   F3.forEach((d, i) => {
     const cx = mL + slot * (i + 0.5);
-    s += `<rect x="${cx - bw / 2}" y="${y(d.p)}" width="${bw}" height="${ph - y(d.p) + mT}"
-          fill="${OK.blue}"${d.sig ? '' : ' fill-opacity="0.45"'}/>`;
+    const lines = [d.name,
+      `${d.k} status holders had a white skin tone (${Math.round(d.p * 100)}%)`,
+      `95% Wilson interval: ${(d.lo * 100).toFixed(1)}% to ${(d.hi * 100).toFixed(1)}%`,
+      d.sig ? 'Above chance' : 'Not significant: the interval crosses chance'];
+    s += `<rect class="gb" x="${cx - bw / 2}" y="${y(d.p)}" width="${bw}" height="${ph - y(d.p) + mT}"
+          fill="${OK.blue}"${d.sig ? '' : ' fill-opacity="0.45"'}${tipAttrs(lines)}/>`;
+    s += `<g class="vl" pointer-events="none">`;
     s += `<line x1="${cx}" y1="${y(d.hi)}" x2="${cx}" y2="${y(d.lo)}" stroke="${INK}" stroke-width="1.5"/>`;
     s += `<line x1="${cx - 7}" y1="${y(d.hi)}" x2="${cx + 7}" y2="${y(d.hi)}" stroke="${INK}" stroke-width="1.5"/>`;
     s += `<line x1="${cx - 7}" y1="${y(d.lo)}" x2="${cx + 7}" y2="${y(d.lo)}" stroke="${INK}" stroke-width="1.5"/>`;
-    s += txt(cx, y(d.hi) - 10, Math.round(d.p * 100) + '%', { size: 12.5, weight: '700', anchor: 'middle' });
-    if (!d.sig) s += txt(cx, y(d.hi) - 26, 'not significant', { size: 10, fill: CHANCE, anchor: 'middle' });
+    s += `</g>`;
+    s += txt(cx, y(d.hi) - 10, Math.round(d.p * 100) + '%', { size: 12.5, weight: '700', anchor: 'middle', cls: 'vl' });
+    if (!d.sig) s += txt(cx, y(d.hi) - 26, 'not significant', { size: 10, fill: CHANCE, anchor: 'middle', cls: 'vl' });
     s += txt(cx, mT + ph + 22, d.name, { size: 13, weight: '600', anchor: 'middle' });
     s += txt(cx, mT + ph + 39, d.k + ' white skin tone', { size: 10.5, fill: SOFT, anchor: 'middle' });
   });
   s += txt(mL, H - 12, 'Bars show the share; whiskers are 95% Wilson intervals. SD 3.5 Large’s '
     + 'interval crosses the chance line, so its result is not significant.', { size: 10.5, fill: SOFT });
-  return svg(W, H, s);
+  return svg(W, H, s, 'Figure 3: share of status holders with a white skin tone when no race was named. Bar chart.');
 }
 
 /* ------------------------------------------------------------------ */
@@ -240,8 +276,7 @@ function figure5() {
   F5_MODES.forEach((m, i) => {
     const col = i % 4, row = Math.floor(i / 4);
     const cx = mL + col * 190, cy = 16 + row * 18;
-    s += `<rect x="${cx}" y="${cy - 8}" width="10" height="10" fill="${m.color}"/>`;
-    s += txt(cx + 15, cy + 1, m.label, { size: 10.5, fill: SOFT });
+    s += legendItem(i, cx, cy + 2, 10, m.color, m.label, 10.5, m.label.length * 5.6);
   });
   [0, 0.25, 0.5, 0.75, 1].forEach(t => {
     s += `<line x1="${x(t)}" y1="${mT - 8}" x2="${x(t)}" y2="${mT + 4 * rowStep - 14}" stroke="${HAIR}"/>`;
@@ -250,21 +285,25 @@ function figure5() {
   F5.forEach((d, i) => {
     const y = mT + i * rowStep;
     s += txt(mL - 16, y + barH / 2 + 4, d.name, { size: 13, weight: '600', anchor: 'end' });
-    let acc = 0;
-    F5_MODES.forEach(m => {
+    /* the whole row grows from the axis, so the stack reads as one bar while it draws */
+    let acc = 0, segs = '', labels = '';
+    F5_MODES.forEach((m, mi) => {
       const v = d[m.k]; if (!v) return;
       const x0 = x(acc / N), x1 = x((acc + v) / N);
-      s += `<rect x="${x0}" y="${y}" width="${x1 - x0}" height="${barH}" fill="${m.color}"><title>${m.label}: ${v} of ${N}</title></rect>`;
-      if ((x1 - x0) > 26) s += txt((x0 + x1) / 2, y + barH / 2 + 4, v,
-        { size: 11, fill: '#fff', weight: '600', anchor: 'middle' });
+      segs += `<rect x="${x0}" y="${y}" width="${x1 - x0}" height="${barH}" fill="${m.color}"${
+        tipAttrs([d.name, `${m.label}: ${v} of ${N} prompts (${pct(v, N)})`], mi)}/>`;
+      if ((x1 - x0) > 26) labels += txt((x0 + x1) / 2, y + barH / 2 + 4, v,
+        { size: 11, fill: '#fff', weight: '600', anchor: 'middle', cls: 'vl' })
+        .replace('<text', '<text pointer-events="none"');
       acc += v;
     });
+    s += `<g class="gh" style="transform-origin:${mL}px 0px">${segs}</g>${labels}`;
     s += txt(mL + pw + 10, y + barH / 2 + 4, (d.valid / N * 100).toFixed(1) + '%',
       { size: 12.5, weight: '700', fill: OK.green });
   });
   s += txt(mL, H - 10, 'Each bar is that model’s 240 two-race prompts. The green share on the '
     + 'left is the denominator every bias number is measured over.', { size: 10.5, fill: SOFT });
-  return svg(W, H, s);
+  return svg(W, H, s, 'Figure 5: how each model rendered its 240 two-race prompts. Stacked bar chart.');
 }
 
 /* ------------------------------------------------------------------ */
@@ -371,10 +410,11 @@ function table2() {
 /* ------------------------------------------------------------------ */
 window.BIBO_FIGURES = {
   fig1: { render: figure1, src: 'PROTOCOL.md §1' },
-  fig2: { render: figure2, src: 'baseline_default_race.csv, dsb_primary.csv, dsb_by_order.csv' },
-  fig3: { render: figure3, src: 'baseline_default_race.csv, CALCULATIONS.md B1' },
+  /* interactive: tooltips, focus and legend highlighting; grow: bars draw in on first view */
+  fig2: { render: figure2, src: 'baseline_default_race.csv, dsb_primary.csv, dsb_by_order.csv', interactive: true, grow: true },
+  fig3: { render: figure3, src: 'baseline_default_race.csv, CALCULATIONS.md B1', interactive: true, grow: true },
   fig4: { render: figure4, src: 'dsb_by_order.csv, CALCULATIONS.md B2 and B3' },
-  fig5: { render: figure5, src: 'fidelity_summary.csv' },
+  fig5: { render: figure5, src: 'fidelity_summary.csv', interactive: true, grow: true },
   fig6: { render: figure6, src: 'dsb_by_scene.csv, OPEN_ANALYSES.md A3' },
   tab1: { render: table1, src: 'human_audit_report.json, reliability.json' },
   tab2: { render: table2, src: 'glmm_primary.csv, glmm_robustness.csv, dsb_primary.csv' }
