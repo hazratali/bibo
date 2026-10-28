@@ -219,6 +219,10 @@ figcaption b{color:var(--ink)}
    the 4.5:1 AA floor. The colour alone gives 6.8:1. */
 figcaption .src{display:block;margin-top:.5rem;font-family:var(--mono);font-size:.72rem}
 .tableframe{padding:.4rem 1.1rem}
+/* An embedded figure image: white like the paper, capped at its design width so its text stays
+   the size it was drawn at. */
+.figimg{background:#fff}
+.figimg img{display:block;width:100%;max-width:680px;height:auto;margin:0 auto}
 
 /* ---------- interactive bar charts ---------- */
 /* Hover, tap or keyboard focus on a bar shows its exact count and dims the other bars; a legend

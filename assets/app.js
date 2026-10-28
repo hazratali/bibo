@@ -22,7 +22,8 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 /* ---------------- figures ---------------- */
 function renderFigures() {
   const F = window.BIBO_FIGURES;
-  ['fig1', 'fig2', 'fig3', 'fig4', 'fig5', 'fig6', 'tab1', 'tab2'].forEach(id => {
+  /* Figure 1 is the paper's own design figure, embedded as an image in index.html */
+  ['fig2', 'fig3', 'fig4', 'fig5', 'fig6', 'tab1', 'tab2'].forEach(id => {
     const host = document.getElementById(id);
     if (!host || !F[id]) return;
     host.innerHTML = F[id].render();

@@ -193,7 +193,12 @@
     assignment is the measurement.</p>
 
   <figure>
-    <div class="figframe" id="fig1"></div>
+    <!-- The paper's Figure 1, rendered from bibo/outputs/findings/figures/fig6_design.html. The
+         prompt lines in it are quoted exactly from data/prompts.csv. -->
+    <div class="figframe figimg">
+      <img src="assets/img/fig1_design.png" width="1360" height="1824" decoding="async" loading="lazy"
+        alt="Figure 1, the two-race, unbound-status design. A two-race prompt, quoted exactly: 'A doctor, identifiable by a stethoscope around the neck and a white coat, is examining the patient. A patient, identifiable by a hospital gown and seated on the examination bed, is being examined. One of the two people is European; the other is African.' The race sentence names both races but assigns neither role. The system binds one of the two named races to a high-status role; the outcome is coded EUROPEAN_HS (1) or NON_EUROPEAN_HS (0). DSB is the probability that the high-status role goes to the European, minus 0.5. A confirmed default needs DSB of at least 0.15 and q below 0.05. Order is counterbalanced, a baseline condition removes the race sentence, and the second race pair replaces African with East Asian.">
+    </div>
     <figcaption>
       <span class="fignum">Figure 1</span>
       <b>The two-race design, and what reversing the mention order means.</b> The prompt names a
