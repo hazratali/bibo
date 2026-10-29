@@ -83,8 +83,8 @@ def export(row, slot, group):
         outcome, kind = GATE_LABEL.get(row.code, row.code), "excluded"
 
     if row.is_baseline:
-        outcome = (f"Status-prop holder rendered with a "
-                   f"{'white' if row.holder_race == 'European' else 'non-white'} skin tone")
+        outcome = (f"Status-prop holder rendered as "
+                   f"{'light-skinned' if row.holder_race == 'European' else 'not light-skinned'}")
         kind = "baseline"
 
     return {

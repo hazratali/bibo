@@ -59,12 +59,12 @@ const F2 = [
   { name: 'GPT Image 1.5', n: 230, v: [1.000, 0.817, 0.638], k: [[22, 22], [188, 230], [74, 116]] },
   { name: 'Grok Imagine', n: 200, v: [0.857, 0.830, 0.703], k: [[18, 21], [166, 200], [71, 101]] },
   { name: 'Imagen 4', n: 173, v: [0.857, 0.746, 0.571], k: [[18, 21], [129, 173], [52, 91]] },
-  { name: 'SD 3.5 Large', n: 85, v: [0.667, 0.694, 0.351], k: [[12, 18], [59, 85], [13, 37]] }
+  { name: 'SD 3.5 Large', n: 85, v: [0.733, 0.694, 0.351], k: [[11, 15], [59, 85], [13, 37]] }
 ];
 const F2_LABELS = ['No race named', 'Two races named', 'Adversarial ordering'];
 const F2_COLS = [OK.blue, OK.amber, OK.green];
 const F2_TIP = [
-  (k, n) => `No race named: ${k} of ${n} status holders had a white skin tone (${pct(k, n)})`,
+  (k, n) => `No race named: ${k} of ${n} status holders were light-skinned (${pct(k, n)})`,
   (k, n) => `Two races named: the European-presenting person held the role in ${k} of ${n} images (${pct(k, n)})`,
   (k, n) => `European named second: the European-presenting person held the role in ${k} of ${n} images (${pct(k, n)})`
 ];
@@ -109,7 +109,7 @@ const F3 = [
   { name: 'GPT Image 1.5', p: 1.000, lo: 0.851, hi: 1.000, k: '22 of 22', sig: true },
   { name: 'Grok Imagine', p: 0.857, lo: 0.654, hi: 0.950, k: '18 of 21', sig: true },
   { name: 'Imagen 4', p: 0.857, lo: 0.654, hi: 0.950, k: '18 of 21', sig: true },
-  { name: 'SD 3.5 Large', p: 0.667, lo: 0.437, hi: 0.837, k: '12 of 18', sig: false }
+  { name: 'SD 3.5 Large', p: 0.733, lo: 0.480, hi: 0.891, k: '11 of 15', sig: false }
 ];
 
 function figure3() {
@@ -127,7 +127,7 @@ function figure3() {
   F3.forEach((d, i) => {
     const cx = mL + slot * (i + 0.5);
     const lines = [d.name,
-      `${d.k} status holders had a white skin tone (${Math.round(d.p * 100)}%)`,
+      `${d.k} status holders were light-skinned (${Math.round(d.p * 100)}%)`,
       `95% Wilson interval: ${(d.lo * 100).toFixed(1)}% to ${(d.hi * 100).toFixed(1)}%`,
       d.sig ? 'Above chance' : 'Not significant: the interval crosses chance'];
     s += `<rect class="gb" x="${cx - bw / 2}" y="${y(d.p)}" width="${bw}" height="${ph - y(d.p) + mT}"
@@ -140,11 +140,11 @@ function figure3() {
     s += txt(cx, y(d.hi) - 10, Math.round(d.p * 100) + '%', { size: 12.5, weight: '700', anchor: 'middle', cls: 'vl' });
     if (!d.sig) s += txt(cx, y(d.hi) - 26, 'not significant', { size: 10, fill: CHANCE, anchor: 'middle', cls: 'vl' });
     s += txt(cx, mT + ph + 22, d.name, { size: 13, weight: '600', anchor: 'middle' });
-    s += txt(cx, mT + ph + 39, d.k + ' white skin tone', { size: 10.5, fill: SOFT, anchor: 'middle' });
+    s += txt(cx, mT + ph + 39, d.k + ' light-skinned', { size: 10.5, fill: SOFT, anchor: 'middle' });
   });
   s += txt(mL, H - 12, 'Bars show the share; whiskers are 95% Wilson intervals. SD 3.5 Large’s '
     + 'interval crosses the chance line, so its result is not significant.', { size: 10.5, fill: SOFT });
-  return svg(W, H, s, 'Figure 3: share of status holders with a white skin tone when no race was named. Bar chart.');
+  return svg(W, H, s, 'Figure 3: share of light-skinned status holders when no race was named. Bar chart.');
 }
 
 /* ------------------------------------------------------------------ */

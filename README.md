@@ -27,7 +27,7 @@ scenes and 60 locked prompts.
 
 | | |
 |---|---:|
-| Outputs placing a white-skin-toned person in the status role when **no race was named**, GPT Image 1.5 | **100%** (22 of 22) |
+| Outputs placing a light-skinned person in the status role when **no race was named**, GPT Image 1.5 | **100%** (22 of 22) |
 | Margin over chance when two races are named | **+0.31** GPT · +0.33 Grok · +0.24 Imagen · +0.19 SD |
 | Odds of a European-presenting status-holder when named first rather than second | **19.4×** |
 | Prompts rendered as instructed, most compliant model to least | **96% → 35%** |
