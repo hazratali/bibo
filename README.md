@@ -1,5 +1,5 @@
 # Bias In, Bias Out
-## Who Holds the Gavel? Who Holds the Gavel? Race, Mention Order, and Role Assignment in Two-Person Text-to-Image Generation
+## Who Holds the Gavel? Race, Mention Order, and Role Assignment in Two-Person Text-to-Image Generation
 **A Human-Validated Audit of Default-European Race-to-Role Assignment for High-Status Roles
 across Four Text-to-Image Models**
 
