@@ -1,9 +1,10 @@
 # Bias In, Bias Out
-
+## Who Holds the Gavel? Who Holds the Gavel? Race, Mention Order, and Role Assignment in Two-Person Text-to-Image Generation
 **A Human-Validated Audit of Default-European Race-to-Role Assignment for High-Status Roles
 across Four Text-to-Image Models**
 
-Project page: **https://hazratali.github.io/bibo/**
+https://anonymous.4open.science/w/bibo-76C8/
+<!-- Project page: **https://hazratali.github.io/bibo/** -->
 
 ---
 
@@ -46,10 +47,11 @@ pro-European over-calls, the error direction that would inflate the reported bia
 
 | | |
 |---|---|
-| Pipeline, results and figures | https://github.com/baqarjafri/BIBO_Research |
-| Design and analysis plan | [PROTOCOL.md](https://github.com/baqarjafri/BIBO_Research/blob/main/PROTOCOL.md) |
+anonymized for peer review purposes
+<!-- | Pipeline, results and figures | https://github.com/baqarjafri/BIBO_Research | -->
+<!-- | Design and analysis plan | [PROTOCOL.md](https://github.com/baqarjafri/BIBO_Research/blob/main/PROTOCOL.md) | -->
 | All 1,056 generated images | [Google Drive](https://drive.google.com/drive/folders/18WQEJzRRblKPY-DOzZ70jU9tcM5EgUz8) |
-| SHA-256 checksums | [SHA256SUMS.txt](https://github.com/baqarjafri/BIBO_Research/blob/main/outputs/SHA256SUMS.txt) |
+<!-- | SHA-256 checksums | [SHA256SUMS.txt](https://github.com/baqarjafri/BIBO_Research/blob/main/outputs/SHA256SUMS.txt) | -->
 
 The full corpus is public, not a sample. It includes every image the coding gates excluded, and
 each one is hashed, so any download can be checked against the exact set the results were
@@ -84,15 +86,17 @@ A preprint is forthcoming. Until then, cite the project page and the code reposi
 
 ## Authors
 
-Hazrat Ali · Muhammad Muneeb Saad · Baqar Jafri
+<!-- Hazrat Ali · Muhammad Muneeb Saad · Baqar Jafri -->
 
-University of Stirling
+<!-- University of Stirling -->
 
 ## Contact
-Reach out to [Dr. Hazrat Ali](https://hazratali.github.io/)
+anonymized for peer-review purposes
+<!-- Reach out to [Dr. Hazrat Ali](https://hazratali.github.io/) -->
 
 ## Note on the images
 
-Every study image is a generated model output, not a photograph of a real person. The only real
-photographs are the author headshots in `assets/img/team/`. The race categories are those used
+Every study image is a generated model output, not a photograph of a real person. 
+<!-- The only real photographs are the author headshots in `assets/img/team/`.  -->
+The race categories are those used
 in the prompts and in the labelling scheme, and are not a claim about anyone's identity.
