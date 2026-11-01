@@ -149,9 +149,19 @@ span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius
 /* Logos sit on white in both themes: the Stirling mark is a single dark green that would vanish
    on the dark background, and the official colours should not be altered. */
 .logotile{display:flex;align-items:center;justify-content:center;background:#fff;
-  border:1px solid var(--hair);border-radius:4px;padding:.55rem .9rem;height:3.5rem}
+  border:1px solid var(--hair);border-radius:4px;padding:.6rem .9rem;height:4rem}
 .logotile:hover{border-color:var(--soft)}
 .logotile img{height:100%;width:auto;max-width:11rem}
+/* a one-line wordmark is too long for the standard tile; let it run wider so its text stays legible */
+.logotile img.wide{width:14rem;max-width:none;height:auto}
+/* square and stacked marks fill more of the tile, so they read at the same weight as the wordmarks */
+.logotile.compact{padding:.3rem .55rem}
+@media(max-width:720px){
+  .hero-logos{gap:.55rem}
+  .logotile{height:3rem;padding:.45rem .65rem}
+  .logotile img.wide{width:11.5rem}
+  .logotile.compact{padding:.22rem .4rem}
+}
 
 .explainer{margin-top:2.2rem;padding-top:1.5rem;border-top:1px solid var(--hair)}
 .exq{font-family:var(--serif);font-size:clamp(1.3rem,2.6vw,1.85rem);line-height:1.3;
@@ -276,6 +286,7 @@ figcaption .src{display:block;margin-top:.5rem;font-family:var(--mono);font-size
 .dtable tbody th{font-weight:600;max-width:22rem}
 .dtable .num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .dtable .strong{font-weight:700;color:var(--blue)}
+.tnote{font-size:.78rem;color:var(--soft);margin:.6rem 0 0}
 .dtable .note{color:var(--soft);font-size:.78rem;max-width:24rem}
 .verdict{font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;padding:.2rem .5rem;
   border:1px solid currentColor;white-space:nowrap}
@@ -331,9 +342,9 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
 .cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.4rem}
 .cite{font-family:var(--mono);font-size:.74rem;line-height:1.7;background:var(--panel);
   padding:1rem 1.1rem;border-left:2px solid var(--amber);white-space:pre-wrap;overflow-x:auto}
-.copybtn{margin-top:.7rem;font:inherit;font-size:.77rem;padding:.45rem .9rem;border:1px solid var(--ink);
+.morebtn{display:block;margin:1.4rem auto 0;font:inherit;font-size:.77rem;padding:.45rem .9rem;border:1px solid var(--ink);
   background:none;color:var(--ink);cursor:pointer;border-radius:2px}
-.copybtn:hover{background:var(--ink);color:var(--bg)}
+.morebtn:hover{background:var(--ink);color:var(--bg)}
 .callout{border-left:3px solid var(--amber);padding:.2rem 0 .2rem 1rem;margin:1.4rem 0}
 footer{padding:2rem 3rem 4rem;font-size:.77rem;color:var(--soft);border-top:1px solid var(--hair)}
 
@@ -356,7 +367,7 @@ footer{padding:2rem 3rem 4rem;font-size:.77rem;color:var(--soft);border-top:1px 
   footer{padding:2rem 1.3rem 3rem}
 }
 @media print{
-  .rail,.filters,.copybtn,.themebtn{display:none}
+  .rail,.filters,.morebtn,.themebtn{display:none}
   .shell{grid-template-columns:1fr}.band{padding:1rem 0;break-inside:avoid}
   figure{break-inside:avoid}
 }

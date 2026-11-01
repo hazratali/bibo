@@ -2,8 +2,8 @@
 
 /* The author names, photos and logos are in the byline at the top of index.html. */
 
-/* The three images that open the Evidence section. All are the adversarial
-   ordering, meaning the prompt named the European second. */
+/* The three images that open the Evidence section. In all three the prompt named the
+   European second. */
 const LEAD = ['scene_07', 'scene_02', 'scene_05'];
 
 const GROUPS = [
@@ -23,7 +23,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 function renderFigures() {
   const F = window.BIBO_FIGURES;
   /* Figure 1 is the paper's own design figure, embedded as an image in index.html */
-  ['fig2', 'fig3', 'fig4', 'fig5', 'fig6', 'tab1', 'tab2'].forEach(id => {
+  ['figshare', 'figfidelity', 'figscene', 'tabrate', 'tabvalid'].forEach(id => {
     const host = document.getElementById(id);
     if (!host || !F[id]) return;
     host.innerHTML = F[id].render();
@@ -117,7 +117,14 @@ function chartEntrance() {
 }
 
 /* ---------------- gallery ---------------- */
-let CARDS = [], filter = 'all';
+let CARDS = [], filter = 'all', expanded = false;
+/* The gallery opens with two rows; the rest is one click away, so the page stays short. With
+   no filter, the preview is one image from each group (the order-flip group as a pair with the
+   same two races in both orders), spread across the four systems and not repeating the images
+   shown higher on the page. */
+const PREVIEW = 6;
+const PREVIEW_ALL = ['base_gpt_1', 'flip_grok_2_O1', 'flip_grok_2_O2', 'scene_03',
+  'fail_race_collapse_sd', 'counter_imagen'];
 
 /* Say it the way the surrounding prose says it. "East Asian named first" is the
    same fact as "European named second", but only the second phrasing lets the
@@ -125,7 +132,7 @@ let CARDS = [], filter = 'all';
 function ordering(c) {
   if (!c.order) return 'No race named';
   return c.order === 'O2'
-    ? 'European named second · adversarial ordering'
+    ? 'European named second'
     : 'European named first';
 }
 
@@ -165,7 +172,7 @@ function renderFilters() {
     if (!n) return;
     const b = el('button', 'chip' + (g.key === filter ? ' on' : ''), `${esc(g.label)}`);
     b.type = 'button'; b.setAttribute('aria-pressed', String(g.key === filter));
-    b.onclick = () => { filter = g.key; renderFilters(); renderGrid(); };
+    b.onclick = () => { filter = g.key; expanded = false; renderFilters(); renderGrid(); };
     host.appendChild(b);
   });
 }
@@ -173,9 +180,12 @@ function renderFilters() {
 function renderGrid() {
   const host = $('#grid'); if (!host) return;
   host.innerHTML = '';
-  const shown = CARDS.filter(c => filter === 'all' || c.group === filter);
+  const matching = CARDS.filter(c => filter === 'all' || c.group === filter);
+  const shown = expanded ? matching
+    : filter === 'all' ? PREVIEW_ALL.map(id => CARDS.find(c => c.slot === id)).filter(Boolean)
+    : matching.slice(0, PREVIEW);
   $('#gcount').textContent =
-    `Showing ${shown.length} of ${CARDS.length} images. Select one to see the prompt it came from.`;
+    `Showing ${shown.length} of ${matching.length} images. Select one to see the prompt it came from.`;
   shown.forEach(c => {
     const b = el('button', 'gcard');
     b.type = 'button';
@@ -193,6 +203,13 @@ function renderGrid() {
     b.onclick = () => openLightbox(c);
     host.appendChild(b);
   });
+  $('#gmore')?.remove();
+  if (shown.length < matching.length) {
+    const more = el('button', 'morebtn', `Show all ${matching.length} images`);
+    more.type = 'button'; more.id = 'gmore';
+    more.onclick = () => { expanded = true; renderGrid(); };
+    host.after(more);
+  }
 }
 
 function openLightbox(c) {
@@ -200,7 +217,7 @@ function openLightbox(c) {
   $('#lbimg').src = c.full;
   $('#lbimg').alt = `${c.model} output for the ${c.scene} scene. ${c.outcome}.`;
   $('#lbside').innerHTML =
-    `<h4>Model</h4><p>${esc(c.model)}</p>
+    `<h4>System</h4><p>${esc(c.model)}</p>
      <h4>Scene</h4><p>${esc(c.scene)} (scene ${c.sceneId})</p>
      <h4>Condition</h4><p>${esc(ordering(c))}${c.order ? ` (${esc(c.order)})` : ''}${
       c.racePair ? ` · ${esc(c.racePair.replace('_', ' and '))}` : ''}</p>
@@ -238,23 +255,11 @@ function theme() {
   };
 }
 
-function copyCite() {
-  const btn = $('#copy'); if (!btn) return;
-  btn.onclick = async () => {
-    try {
-      await navigator.clipboard.writeText($('#bibtex').textContent);
-      btn.textContent = 'Copied';
-    } catch { btn.textContent = 'Select the text above to copy'; }
-    setTimeout(() => { btn.textContent = 'Copy BibTeX'; }, 2200);
-  };
-}
-
 /* ---------------- boot ---------------- */
 renderFigures();
 chartInteractions();
 chartEntrance();
 theme();
-copyCite();
 scrollSpy();
 $('#lbclose').onclick = () => $('#lb').close();
 $('#lb').addEventListener('click', e => { if (e.target.id === 'lb') $('#lb').close(); });
