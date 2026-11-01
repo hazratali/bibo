@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BIBO · Race-to-role assignment in four text-to-image models</title>
-<meta name="description" content="A human-validated audit of race-to-role assignment for high-status roles across four text-to-image models. 1,056 images, four models, deterministic labelling, blind human validation.">
+<meta name="description" content="A human-validated audit of race-to-role assignment for high-status roles across four text-to-image models. 1,056 images, four models, deterministic labelling, human validation.">
 <meta property="og:title" content="Bias In, Bias Out">
 <meta property="og:description" content="When two people share a scene and only one holds the status prop, which race does a text-to-image model choose? An audit of four systems over 1,056 images.">
 <meta property="og:type" content="website">
@@ -48,7 +48,7 @@
     <span class="t-sub">A Human-Validated Audit of Default-European Race-to-Role Assignment
     for High-Status Roles across Four Text-to-Image Models</span></h1>
 
-  <!-- One row of authors: the Project Lead block first, then the byline. -->
+  <!-- Team, in three rows as Dr. Ali set out: Project Lead, Core team, Project team. -->
   <div class="authors">
   <div class="leadrow">
   <img class="hero-av" src="assets/img/team/hazrat-ali.webp" width="360" height="360" alt="" decoding="async">
@@ -57,11 +57,28 @@
   <p><b>Dr. Hazrat Ali</b> — <span>University of Stirling</span></p>
   </div>
   </div>
+  <div class="teamrow">
+  <p class="team-title">Core team</p>
   <ol class="bylist">
     <!-- <li><b>Dr. Hazrat Ali</b><span>University of Stirling</span></li> -->
-    <li><img class="hero-av" src="assets/img/team/muneeb-saad.webp" width="360" height="360" alt="" decoding="async"><b>Dr. Muhammad Muneeb Saad</b><span>Munster Technological University</span></li>
     <li><img class="hero-av" src="assets/img/team/baqar-jafri.webp" width="360" height="360" alt="" decoding="async"><b>Baqar Jafri</b><span>University of Stirling</span></li>
+    <li><img class="hero-av" src="assets/img/team/muneeb-saad.webp" width="360" height="360" alt="" decoding="async"><b>Dr. Muhammad Muneeb Saad</b><span>Munster Technological University</span></li>
   </ol>
+  </div>
+  <div class="teamrow">
+  <p class="team-title">Project team</p>
+  <ul class="ptlist">
+    <li><b>Alexander E. I. Brownlee</b><span>University of Stirling, United Kingdom</span></li>
+    <li><b>Simon T. Powers</b><span>University of Stirling, United Kingdom</span></li>
+    <li><b>Leonardo Bezerra</b><span>University of Stirling, United Kingdom</span></li>
+    <li><b>Burcu Can Buglalilar</b><span>University of Stirling, United Kingdom</span></li>
+    <li><b>Vassilis Galanos</b><span>University of Stirling, United Kingdom</span></li>
+    <li><b>Rizwan Qureshi</b><span>Massachusetts General Hospital, Harvard University, USA</span></li>
+    <li><b>Zubair Shah</b><span>Hamad Bin Khalifa University, Qatar</span></li>
+    <li><b>Junaid Qadir</b><span>Qatar University, Qatar</span></li>
+    <li><b>Muhammad Bilal</b><span>Birmingham City University, United Kingdom</span></li>
+  </ul>
+  </div>
   </div>
   <div class="hero-logos" role="list" aria-label="Institutions">
     <a class="logotile" role="listitem" href="https://www.stir.ac.uk/">
@@ -158,8 +175,8 @@
     a bias read off a scene by an automated judge is only as credible as that judge, and such
     judges are rarely checked against a human.</p>
   <p>This study addresses all three. It builds the two-race scene, counterbalances the naming order
-    and adds an adversarial condition, and validates every automated label against a blind human
-    coder.</p>
+    and adds an adversarial condition, and checks the automated labels against two human
+    annotators.</p>
 
   <div class="rq"><div class="rqid">RQ1</div><div>
     <p class="rqq"><span class="rqlabel">Assignment.</span> When a prompt names two roles of unequal
@@ -225,7 +242,7 @@
     <div class="node drop"><div class="k">Exclusions</div><div class="v">&minus;272</div>
       <div class="d">six gates, kept and reported as findings</div></div>
     <div class="node out"><div class="k">Analysed</div><div class="v">688</div>
-      <div class="d">plus 419 images re-checked by a blind human</div></div>
+      <div class="d">plus 419 images re-checked by a human annotator</div></div>
   </div>
   <p class="small">Two labellers from different model families read every image independently. A
     third is consulted only where they disagree. A genuine three-way disagreement is recorded as
@@ -354,21 +371,24 @@
 <section class="band" id="validation">
   <p class="tag">Validation and limits</p>
   <h2>If the automated labeller shared the models&rsquo; bias, it would manufacture this result rather than measure it.</h2>
-  <p>That objection is the reason for the human audit. One coder, working blind, reviewed 419
-    images across four strata: every case where the two primary raters disagreed, an archived
-    stratified sample fixed in advance, a balanced extension, and an oversample of the exclusion
-    gates. The model, the labels and the machine ratings were all hidden, the coding was done on
-    the prop-holder rather than on the outcome, and the outcome was derived afterwards.</p>
+  <p>That objection is the reason for the human audit. One of the authors reviewed 419 images
+    across four strata: every case where the two primary raters disagreed, an archived stratified
+    sample fixed in advance, a balanced extension, and an oversample of the exclusion gates. The
+    model and the automated label were hidden while each image was coded, and the label was shown
+    only after the code was saved; the coding was done on the prop-holder rather than on the
+    outcome, and the outcome was derived afterwards. A second annotator, who was not told the
+    hypothesis, independently coded 75 of the same images.</p>
 
   <figure>
     <div class="figframe tableframe" id="tab1"></div>
     <figcaption>
       <span class="fignum">Table 1</span>
       <b>Validation of the automated labelling.</b> Read the first row against the second. Agreement
-      between the automated labelling and the blind human is 0.986, which sits at the 0.977 ceiling
-      that two humans reach with each other. A second, hypothesis-blind coder produced no
-      pro-European over-calls at all, the error direction that would inflate the reported bias, with
-      a one-sided 95% upper bound of 1.5%.
+      between the automated labelling and the human annotator is 0.986, which sits at the 0.977
+      ceiling that two humans reach with each other. In the two random samples the human found no
+      pro-European over-calls (0 of 179), the error direction that would inflate the reported bias,
+      with a one-sided 95% upper bound of 1.5%. The second annotator, who was not told the
+      hypothesis, agreed with the automated labelling on all 45 outcomes both could score.
       <span class="src">Source: human_audit_report.json, reliability.json</span>
     </figcaption>
   </figure>
@@ -465,6 +485,44 @@
     labelling scheme; they are not a claim about anyone&rsquo;s identity. Figures use a
     colourblind-safe palette.</p>
   <p>BIBO · a protocol-archived audit · every image hashed and traceable to the released corpus</p>
+  <details class="disclaimer">
+    <summary>Disclaimer</summary>
+    <p><b>Accuracy:</b> We have checked every reported number against the released data and code,
+      but both automated labelling and human judgement can be wrong, and some errors may remain. The
+      methods, data and code are public so that anyone can check them; please tell us if you find an
+      error.</p>
+    <p><b>Generated images:</b> Every study image on this page was generated by an AI system and
+      shows people who do not exist. Some scenes show criminal-legal roles, such as a convicted
+      defendant, and may be upsetting.</p>
+    <p><b>Race and skin-tone terms:</b> We use race categories, and the term
+      &ldquo;light-skinned&rdquo;, as proxies for how a generated face appears. These categories
+      simplify: they cannot represent mixed or ambiguous appearance, and the link between skin
+      colour and racial categories differs across cultures, regions and individuals. A label records
+      how a face was read, not anyone&rsquo;s identity, and using these terms does not endorse any
+      way of classifying people. Treating the person who holds the high-status object, such as a
+      gavel or a stethoscope, as the high-status person is also a proxy.</p>
+    <p><b>Scope:</b> The findings cover four systems as they were accessed in 2026, tested on
+      twelve scenes, two race pairs and English prompts. Systems change without notice, so the
+      results may not hold for other systems, versions, prompts or settings, and they are not
+      conclusive evidence of bias, or of its absence, elsewhere.</p>
+    <p><b>Patterns, not intent or cause:</b> The results show patterns in what the systems
+      generated. They do not show that anyone intended these patterns, and they do not establish
+      their cause.</p>
+    <p><b>Not for decisions about people:</b> The results describe aggregate patterns in generated
+      images. They must not be used to judge or profile any person or group, or to justify
+      discrimination of any kind.</p>
+    <p><b>Third-party systems:</b> Products and companies are named for research purposes only.
+      Naming them implies no endorsement, and the systems may have changed since they were
+      tested.</p>
+    <p><b>Views and affiliations:</b> This is research by the project team. It is not an official
+      statement of the team&rsquo;s institutions or funders and does not necessarily reflect their
+      views.</p>
+    <p><b>Updates:</b> Methods, data and results on this page may be revised or corrected; the
+      project&rsquo;s <a href="https://github.com/baqarjafri/BIBO_Research">GitHub repository</a>
+      records every change.</p>
+    <p><b>Privacy and ethics:</b> No personal data about real people were collected for the study,
+      and the study received institutional ethics approval.</p>
+  </details>
 </footer>
 </main>
 </div>

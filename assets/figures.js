@@ -311,12 +311,14 @@ function figure6() {
 function table1() {
   const rows = [
     ['Automated labelling vs the human coder, on the outcome', '0.986', '0.978', '280',
-      'The share of images where the automated outcome and the blind human agree.'],
+      'The share of images where the automated outcome and the human annotator agree.'],
     ['Human vs human ceiling, on the outcome', '0.977', '0.970', '44',
       'Two humans agreeing with each other. The automated coding matches this.'],
+    ['Second annotator, not told the hypothesis, vs the automated labelling', '1.000', '1.000', '45',
+      'The annotator who did not know the hypothesis agreed on every outcome both could score.'],
     ['Pro-European over-calls by the automated labelling', '0 of 179', '≤ 1.5%', '179',
-      'The error direction that would inflate the reported bias. None were found.'],
-    ['Agreement between the two primary raters, prop-holder race', '0.925', '—', '925',
+      'The error direction that would inflate the reported bias. None were found in the two random samples.'],
+    ['Agreement between the two primary raters, prop-holder race', '0.969', '0.946', '925',
       'The field that determines the outcome.'],
     ['Human vs human, full label including exclusion category', '0.853', '0.835', '75',
       'Lower because the two humans applied exclusion conventions differently, not because they disagreed on race.']

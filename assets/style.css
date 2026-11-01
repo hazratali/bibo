@@ -127,10 +127,18 @@ span.pending{background:var(--panel);border:1px dashed var(--hair);border-radius
 .leadrow .lead-title + p{font-size:0}
 .leadrow .lead-title + p b{display:block;font-size:.87rem;font-weight:600}
 .leadrow .lead-title + p span{display:block;font-size:.78rem;color:var(--soft)}
-/* All three authors on one line under a single rule, wrapping only when the screen is too narrow. */
-.authors{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 2.4rem;margin:1.3rem 0 0;
+/* The team in three rows under a single rule: Project Lead, Core team, Project team. */
+.authors{display:flex;flex-direction:column;align-items:flex-start;gap:1.1rem;margin:1.3rem 0 0;
   padding-top:1rem;border-top:2px solid var(--ink)}
 .authors .bylist{margin:0;padding:0;border-top:0;gap:1rem 2.4rem}
+.teamrow{width:100%}
+.team-title{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--blue);margin:0 0 .45rem;max-width:none}
+.ptlist{list-style:none;margin:0;padding:0;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:.55rem 2rem}
+.ptlist li{font-size:.87rem;line-height:1.4}
+.ptlist b{display:block;font-weight:600}
+.ptlist span{display:block;font-size:.78rem;color:var(--soft)}
 /* name and affiliation sit together in the middle of the photo's height, as in the lead block */
 .bylist li{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:1fr auto auto 1fr;
   column-gap:.75rem}
@@ -353,3 +361,9 @@ footer{padding:2rem 3rem 4rem;font-size:.77rem;color:var(--soft);border-top:1px 
   figure{break-inside:avoid}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* Disclaimer: collapsed by default at the foot of the page. */
+details.disclaimer{margin-top:1.2rem;border-top:1px solid var(--hair);padding-top:.8rem;max-width:72ch}
+details.disclaimer summary{cursor:pointer;font-family:var(--mono);font-size:.7rem;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+details.disclaimer summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+details.disclaimer p{margin:.6rem 0 0;line-height:1.55}
